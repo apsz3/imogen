@@ -94,11 +94,11 @@ class ImageTransformer(Transformer):
 
     def image_spec_expr(self, items):
         size, color, text, composition_body = items
-        try:
-            text = text.strip('"')
-        except:
+        # try:
+        text = text.strip('"')
+        # except:
 
-            breakpoint()
+        # breakpoint()
         if composition_body is not None:
             return Composition(None, size, color, text, composition_body)
         else:
@@ -156,7 +156,7 @@ class ImageTransformer(Transformer):
                 rs = self.composition_repeated_img((offset, r))
                 components.append(rs)
             else:
-                breakpoint()
+                # breakpoint()
                 r.offset += offset
                 components.append(r)
         repeated.body = components

@@ -17,7 +17,6 @@ def run(file):
     parse = parser.parse(code)
     transformed = ImageTransformer()
     tree = transformed.transform(parse)
-    breakpoint()
     pprint(tree)
 
     r = Render(tree, {"vars": transformed.vars})
