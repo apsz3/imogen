@@ -1,0 +1,188 @@
+dsl_code = """
+local usa_flag_size = (190, 100)
+local red = #(179, 25, 66)
+local white = #(255, 255, 255)
+local blue = #(10, 49, 97)
+
+usa_flag usa_flag_size white "USA Flag" {
+    (0, 0) repeat 6 { (0, 7.7) [ (190, 7.7) white "" ] }
+
+    (0, 0) [ (190, 7.7) red "" ]
+    (0, 15.4) [ (190, 7.7) red "" ]
+    (0, 30.8) [ (190, 7.7) red "" ]
+    (0, 46.2) [ (190, 7.7) red "" ]
+    (0, 61.6) [ (190, 7.7) red "" ]
+    (0, 77) [ (190, 7.7) red "" ]
+    (0, 92.4) [ (190, 7.7) red "" ]
+    (0, 0) [ (76, 53.9) blue "" ]
+
+
+}
+
+local x = 1
+local y = x + 1
+local zpx = (0, 0)
+local zpx_offset = zpx + (100, 100)
+local zpx_x = zpx.x
+local img_size = (100, 100)
+local int = 1
+local float = 2.0
+local color = #red
+local a (0, 0) #red "Hello, world!"
+local b (0, 0) #red "Hello, world!"
+local c img_size #red "Hello, world!"
+local color = #red
+
+local rgb = #(1, 2 ,3)
+local size = (200, 200)
+local n = 4
+local comp2 size #black "COMPOSITION" {
+    (0, 0) repeat n { zpx [ (size.x, size.y/n) #(255,0, 255) "top"] }
+}
+
+local topleft img_size color "TOP LEFT"
+local topright img_size #black "TOP RIGHT" {
+    zpx [ (100, 50) #blue "LEFT" ]
+}
+
+local anon_bottom_right = [ (100, 100) #yellow "BOTTOM RIGHT" ]
+local comp (comp2.size*10) #black "COMPOSITION" {
+    zpx anon_bottom_right
+    |>  zpx topleft
+}
+
+
+local usa_flag_size = (190, 100)
+local red = #(179, 25, 66)
+local white = #(255, 255, 255)
+local blue = #(10, 49, 97)
+
+
+
+local N = 190
+local stripe_height = N / 13
+local union_height = stripe_height * 7
+local union_width = N * 0.4
+
+local red = #(179, 25, 66)
+local white = #(255, 255, 255)
+local blue = #(10, 49, 97)
+
+local usa_flag (N, N * 10 / 19) white "USA Flag" {
+    (0, 0) [ (N, stripe_height) red "" ]
+    (0, stripe_height * 2) [ (N, stripe_height) red "" ]
+    (0, stripe_height * 4) [ (N, stripe_height) red "" ]
+    (0, stripe_height * 6) [ (N, stripe_height) red "" ]
+    (0, stripe_height * 8) [ (N, stripe_height) red "" ]
+    (0, stripe_height * 10) [ (N, stripe_height) red "" ]
+    (0, stripe_height * 12) [ (N, stripe_height) red "" ]
+    (0, 0) [ (union_width, union_height) blue "" ]
+}
+
+local repeated_image_size = (50, 50)
+local repeated_image_color = #00ff00
+local repeated_image_text = "Repeated"
+
+repeated_composition (200, 200) #ffffff "Repeated Composition" {
+    (0, 0) repeat i:=4 {
+        (0, 0) [ repeated_image_size repeated_image_color i]
+    }
+}
+"""
+loop_var = """
+local repeated_image_size = (50, 50)
+local repeated_image_color = #00ff00
+local repeated_image_text = "Repeated"
+
+repeated_composition (200, 200) #ffffff "Repeated Composition" {
+    (0, 0) repeat i:=4 {
+        (0, 10*i) [ repeated_image_size repeated_image_color "ee" ]
+    }
+}
+"""
+testing = """
+local french_flag_size = (300, 200)
+local blue = #(0, 85, 164)
+local white = #(255, 255, 255)
+local red = #(239, 65, 53)
+
+local french_flag french_flag_size white "French Flag" {
+    (0, 0) [ (100, 200) blue "" ]
+    (0, 0) [ (100, 200) white "" ]
+    (0, 0) [ (100, 200) red "" ]
+}
+
+local german_flag_size = (300, 200)
+local black = #(0, 0, 0)
+local red = #(221, 0, 0)
+local gold = #(255, 206, 0)
+
+local german_flag german_flag_size black "German Flag" {
+    (0, 0) [ (300, 66.67) black "" ]
+    (0, 0) [ (300, 66.67) red "" ]
+    (0, 0) [ (300, 66.67) gold "" ]
+}
+
+local italian_flag_size = (300, 200)
+local green = #(0, 146, 70)
+local white = #(255, 255, 255)
+local red = #(206, 17, 38)
+
+local italian_flag italian_flag_size green "Italian Flag" {
+    (0, 0) [ (100, 200) green "" ]
+    (0, 0) [ (100, 200) white "" ]
+    (0, 0) [ (100, 200) red "" ]
+}
+
+local swedish_flag_size = (300, 200)
+local blue = #(0, 106, 167)
+local yellow = #(254, 204, 0)
+
+swedish_flag swedish_flag_size blue "Swedish Flag" {
+    (60, 0) [ (60, 200) yellow "E" ]
+    |>
+    (0, 60) [ (300, 60) yellow "R" ]
+
+}
+
+local swiss_flag_size = (200, 200)
+local red = #(255, 0, 0)
+local white = #(255, 255, 255)
+
+swiss_flag swiss_flag_size red "Swiss Flag" {
+    (60, 0) [ (80, 200) white "" ]
+    |>
+    (0, 60) [ (200, 80) white "" ]
+}
+
+local usa_flag_size = (190, 100)
+local red = #(179, 25, 66)
+local white = #(255, 255, 255)
+local blue = #(10, 49, 97)
+
+usa_flag usa_flag_size white "USA Flag" {
+    (0, 0) repeat 5 {
+        (0, 0) [ (190, 7.7) red "" ]
+        (0, 0) [ (190, 7.7) white "" ]
+    }
+    |>
+    (0, 0) [ (76, 53.9) blue "" ]
+
+}
+
+local square_size = (512, 512)
+local tile_size = (64, 64)
+
+colored_square square_size #ffffff "Colored Square" {
+    local color = #red
+    local tx = "foo"
+    (0, 0) repeat 8 {
+        (0, 0) repeat 8 {
+            (0, 0) repeat 8 {
+                (0, 0) [ (32, 32) green "brat" ]
+            }
+            (0, 0) [ (32, 32) color tx ]
+
+        }
+    }
+}

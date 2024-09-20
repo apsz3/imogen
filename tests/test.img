@@ -1,0 +1,45 @@
+-- TODO allow binding sizes in the (size, size) offset for use in the following scope!
+-- TODO: allow RIGHT HAND SIDE OFFSET to make sizing easier?
+-- TODO: what's happening is that more than one stmt in the repeat
+    -- is parsed as a single one, which causes errors.
+    -- Parsing in repeats is completely broken!
+-- TODO Nesting compositions as local in another composition is also broken
+-- COMMENT PARSING IS ALSO BROKEN! IT PARSES AS COLOR! or whatever else with operator
+-- overloading if the comment operator isnt unique
+
+local zpx = (0, 0)
+local px = (64, 64)
+
+local wood_tile_size = (64, 64)
+local brown = #(139, 69, 19)
+
+wood_tile wood_tile_size brown "Wood Tile"
+
+-- todo: fix (px * 2) doesnt work anywhere
+-- local scaled = (px * 2)
+
+local doorpx = (px.x*2, px.y*3)
+door doorpx brown "Door" {
+    local xoffset = 20
+    local stripe = [ (doorpx.x - xoffset*2, px.y/10) #(255, 255, 255) "" ]
+    local spacer =  [ (xoffset, px.y/10) #(0, 0, 0) "" ]
+    --local stripe_and_space (64, 64) #red "" {
+      --  zpx stripe
+     --   zpx spacer
+    --}
+--    stripe_and_space
+    (0,0) spacer
+    (xoffset, doorpx.y/12) stripe
+    (0, 0) spacer
+  zpx repeat 3 {
+        (xoffset, doorpx.y/12) stripe
+        (xoffset, doorpx.y/12) stripe
+
+    }
+}
+-- (0, 0) repeat 10 {
+--     (random(0, 64), random(0, 64)) [ (5, 5) --(160, 82, 45) "" ]
+-- }
+-- (0, 0) repeat 5 {
+--     (random(0, 64), random(0, 64)) [ (3, 3) --(205, 133, 63) "" ]
+-- }
