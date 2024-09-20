@@ -143,7 +143,6 @@ class ImageTransformer(Transformer):
         # we need to return something from them, right?
         # So we get some cursed stacking of lists here.
         # TODO: fix this cursed shit
-        # HOWEVER: it APPEARS THAT WE ARENT HANDLING PIPES PROPERLY THEN!
         new = []
         for item in items:
             if isinstance(item, list):
@@ -191,7 +190,7 @@ class ImageTransformer(Transformer):
         # TODO: fails if Repeated!
         # TODO who knows if itll work?
         second.piped = True
-        return [first, second]
+        return items
 
     def NUMBER(self, items):
         try:
