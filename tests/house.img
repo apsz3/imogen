@@ -46,3 +46,20 @@ blockhouse2 blockhouse_size #white "Unpiped" {
         (0,0 ) [(64, 64) #green ""]
     }
 }
+
+local square_size = (512, 512)
+local tile_size = (64, 64)
+
+colored_square square_size #ffffff "Colored Square" {
+    local color = #red
+    local tx = "foo"
+    (0, 0) repeat 8 {
+        (0, 0) repeat 8 {
+            (0, 0) repeat 8 {
+                (0, 0) [ (32, 32) #green "brat" ]
+            }
+            (0, 0) [ (32, 32) color tx ]
+
+        }
+    }
+}
