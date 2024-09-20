@@ -58,17 +58,6 @@ local horizontal_bar_y = flag_height / 2.5
 
 -- Draw the blue background
 -- TODO: fit-to-size Pair size var that will fit all the constituents
-foo (512, 512) #white "" {
-    (0, 0) [ (flag_width, flag_height) blue "Background" ]
-
-    |>
--- Draw the vertical yellow bar
-    (vertical_bar_x, 0) [ (vertical_bar_width, flag_height) yellow "Vertical Bar" ]
-
---    |>
--- Draw the horizontal yellow bar
-    (0, horizontal_bar_y) [ (flag_width, horizontal_bar_height) yellow "Horizontal Bar" ]
-}
 
 local square_size = (64, 64) * 25
 local colored_square square_size #ffffff "Colored Square" {

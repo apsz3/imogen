@@ -20,6 +20,15 @@ with open("C:/imogen/grammar.lark", "r") as fp:
 parser = Lark(dsl_grammar, start="start", parser="earley")
 
 
+# https://stackoverflow.com/a/73014859
+def flatten(arg):
+    if not isinstance(arg, list):
+        yield arg
+    else:
+        for sub in arg:
+            yield from flatten(sub)
+
+
 class ImageTransformer(Transformer):
     def __init__(self):
         self.vars = {}
@@ -130,16 +139,20 @@ class ImageTransformer(Transformer):
         return items[0]
 
     def composition_body(self, items):
-        # Flatten any piped lists
+        # Flatten any piped lists, which are returned as a tuple since
+        # we need to return something from them, right?
+        # So we get some cursed stacking of lists here.
+        # TODO: fix this cursed shit
         new = []
         for item in items:
             if isinstance(item, list):
-                new.extend(item)
+                new.extend(flatten(item))
             elif isinstance(item, LocalVar):
                 # Transformer will already have visited and computed this.
                 pass
             else:
                 new.append(item)
+        breakpoint()
         return new
 
     def composition_ref_img(self, items):
