@@ -13,13 +13,13 @@ local px = (64, 64)
 local wood_tile_size = (64, 64)
 local brown = #(139, 69, 19)
 
-wood_tile wood_tile_size brown "Wood Tile"
+local wood_tile wood_tile_size brown "Wood Tile"
 
 -- todo: fix (px * 2) doesnt work anywhere
 -- local scaled = (px * 2)
 
 local doorpx = (px.x*2, px.y*3)
-door doorpx brown "Door" {
+local door doorpx brown "Door" {
     local xoffset = 20
     local stripe = [ (doorpx.x - xoffset*2, px.y/10) #(255, 255, 255) "" ]
     local spacer =  [ (xoffset, px.y/10) #(0, 0, 0) "" ]
@@ -43,3 +43,44 @@ door doorpx brown "Door" {
 -- (0, 0) repeat 5 {
 --     (random(0, 64), random(0, 64)) [ (3, 3) --(205, 133, 63) "" ]
 -- }
+local flag_width = 160
+local flag_height = 100
+local blue = #(0, 106, 167)
+local yellow = #(254, 204, 0)
+
+-- Define the size of the cross
+local vertical_bar_width = 20
+local horizontal_bar_height = 20
+
+-- Define the positions of the cross
+local vertical_bar_x = flag_width / 8
+local horizontal_bar_y = flag_height / 2.5
+
+-- Draw the blue background
+-- TODO: fit-to-size Pair size var that will fit all the constituents
+foo (512, 512) #white "" {
+    (0, 0) [ (flag_width, flag_height) blue "Background" ]
+
+    |>
+-- Draw the vertical yellow bar
+    (vertical_bar_x, 0) [ (vertical_bar_width, flag_height) yellow "Vertical Bar" ]
+
+--    |>
+-- Draw the horizontal yellow bar
+    (0, horizontal_bar_y) [ (flag_width, horizontal_bar_height) yellow "Horizontal Bar" ]
+}
+
+local square_size = (64, 64) * 25
+local colored_square square_size #ffffff "Colored Square" {
+    local color = #red
+    local tx = "foo"
+    (0, 0) repeat 8 {
+        (0, 0) repeat 8 {
+            (0, 0) repeat 8 {
+                (0, 0) [ (32, 32) #green "brat" ]
+            }
+            (0, 0) [ (32, 32) color tx ]
+
+        }
+    }
+}
