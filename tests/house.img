@@ -28,11 +28,20 @@ local blockhouse_size = (64, 64) * (4, 4)
 -- }
 
 -- TODO: repeat piping doesnt work.
-blockhouse blockhouse_size #white "Block House" {
+blockhouse blockhouse_size #white "Piped" {
     (0, 0) repeat blockhouse_size.x // block_size.x {
         (0,0 ) block
     }
     |>
+    (0, 0) repeat blockhouse_size.x // block_size.x {
+        (0,0 ) [(64, 64) #green ""]
+    }
+}
+
+blockhouse2 blockhouse_size #white "Unpiped" {
+    (0, 0) repeat blockhouse_size.x // block_size.x {
+        (0,0 ) block
+    }
     (0, 0) repeat blockhouse_size.x // block_size.x {
         (0,0 ) [(64, 64) #green ""]
     }

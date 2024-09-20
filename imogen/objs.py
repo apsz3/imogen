@@ -59,6 +59,7 @@ class Repeated:
     body: t.List[IntermediateImage]
     loop_var: t.Optional[str]
     count: t.Union[int, LocalVar]
+    piped: bool = False
 
 
 @dataclass

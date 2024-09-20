@@ -31,6 +31,8 @@ class Render:
     def do_repeated(
         self, repeated: Repeated, img: Image, comp: Composition, top_left: Point
     ):
+        if repeated.piped:
+            top_left = Point(0, 0)
         # breakpoint()
         for i in range(repeated.count):
             # Generate all the images
@@ -48,12 +50,13 @@ class Render:
                 _rimg_img: IMImage = _rimg.image
                 _real_img = self.create_image(_rimg_img)
                 if piped:
+                    print("Pipe!")
                     paste_x = 0
                     paste_y = 0
                 else:
                     paste_x = top_left.x + offset.x
                     paste_y = top_left.y + offset.y
-                    print(f"write to {paste_x}, {paste_y}")
+                print(f"write to {paste_x}, {paste_y}")
                 img.paste(
                     _real_img,
                     (
@@ -69,6 +72,7 @@ class Render:
                     top_left.y += _rimg_img.size.y
                     if top_left.y >= comp.size.y:
                         print("Composition size exceeded... doing nothing though")
+
         return top_left
 
     # Write code that will take a Composition object and create a PIL image
@@ -110,13 +114,13 @@ class Render:
             offset = intermediate.offset
             # Position
             if piped:
-                paste_x = 0 + offset.x
-                paste_y = 0 + offset.y
+                paste_x = 0
+                paste_y = 0
                 # breakpoint()
             else:
                 paste_x = top_left.x + offset.x
                 paste_y = top_left.y + offset.y
-                print(f"write to {paste_x}, {paste_y}")
+            print(f"write to {paste_x}, {paste_y}")
 
             img.paste(
                 intermediate_image,

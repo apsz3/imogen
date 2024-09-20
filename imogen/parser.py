@@ -190,10 +190,7 @@ class ImageTransformer(Transformer):
         # It will be an INTERMEDIATE IMAGE here always since we're in composition
         # TODO: fails if Repeated!
         # TODO who knows if itll work?
-        if isinstance(second, Repeated):
-            second.body[0].piped = True
-        else:
-            second.piped = True
+        second.piped = True
         return [first, second]
 
     def NUMBER(self, items):
