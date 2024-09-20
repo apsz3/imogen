@@ -103,7 +103,6 @@ class Render:
             #         breakpoint()
             #     else:
             else:
-                breakpoint()
                 intermediate_image = self.create_image(intermediate.image)
             # else:
             # raise ValueError("Invalid intermediate image")

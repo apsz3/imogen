@@ -1,0 +1,39 @@
+-- ground color
+-- dirt color in hex: #8B4513
+
+local ground = #8B4513
+local sky = #skyblue
+local fullsize = (512, 512)
+local ground_thickness = fullsize.y/8
+local sky fullsize sky "Sky" {
+    (0, fullsize.y - ground_thickness) [ (512, ground_thickness) ground "" ]
+}
+
+local block_size = (64, 64)
+local block (64, 64) #brown ""
+
+local blockhouse_size = (64, 64) * (4, 4)
+
+--extern foo  -- Externs can be passed in via CLI.
+-- extern bar @tweak -- they can also be annotated for how they fit in the GUI
+
+-- blockhouse blockhouse_size #white "Block House" {
+--     (0, 1/4 * blockhouse_size.y) repeat blockhouse_size.x // block_size.x {
+--         (0,0 ) block
+--     }
+
+--     (0,0) repeat blockhouse_size.x // block_size.x {
+--         (0,0 ) [block_size #green ""]
+--     }
+-- }
+
+-- TODO: repeat piping doesnt work.
+blockhouse blockhouse_size #white "Block House" {
+    (0, 0) repeat blockhouse_size.x // block_size.x {
+        (0,0 ) block
+    }
+    |>
+    (0, 0) repeat blockhouse_size.x // block_size.x {
+        (0,0 ) [(64, 64) #green ""]
+    }
+}

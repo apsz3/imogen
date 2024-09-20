@@ -1,0 +1,24 @@
+local flag_width = 160
+local flag_height = 100
+local blue = #(0, 106, 167)
+local yellow = #(254, 204, 0)
+
+-- Define the size of the cross
+local vertical_bar_width = 20
+local horizontal_bar_height = 20
+
+-- Define the positions of the cross
+local vertical_bar_x = flag_width / 8
+local horizontal_bar_y = flag_height / 2.5
+
+foo (512, 512) #white "" {
+    (0, 0) [ (flag_width, flag_height) blue "Background" ]
+
+    |>
+-- Draw the vertical yellow bar
+    (vertical_bar_x, 0) [ (vertical_bar_width, flag_height) yellow "Vertical Bar" ]
+
+    |>
+-- Draw the horizontal yellow bar
+    (0, horizontal_bar_y) [ (flag_width, horizontal_bar_height) yellow "Horizontal Bar" ]
+}

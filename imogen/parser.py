@@ -143,16 +143,18 @@ class ImageTransformer(Transformer):
         # we need to return something from them, right?
         # So we get some cursed stacking of lists here.
         # TODO: fix this cursed shit
+        # HOWEVER: it APPEARS THAT WE ARENT HANDLING PIPES PROPERLY THEN!
         new = []
         for item in items:
             if isinstance(item, list):
+                # TODO: flatten?
                 new.extend(flatten(item))
             elif isinstance(item, LocalVar):
                 # Transformer will already have visited and computed this.
                 pass
             else:
                 new.append(item)
-        breakpoint()
+        # breakpoint()
         return new
 
     def composition_ref_img(self, items):
@@ -186,7 +188,12 @@ class ImageTransformer(Transformer):
     def piped_composition_ref(self, items):
         first, second = items
         # It will be an INTERMEDIATE IMAGE here always since we're in composition
-        second.piped = True
+        # TODO: fails if Repeated!
+        # TODO who knows if itll work?
+        if isinstance(second, Repeated):
+            second.body[0].piped = True
+        else:
+            second.piped = True
         return [first, second]
 
     def NUMBER(self, items):
