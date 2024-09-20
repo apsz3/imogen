@@ -190,7 +190,7 @@ class ImageTransformer(Transformer):
         # TODO: fails if Repeated!
         # TODO who knows if itll work?
         second.piped = True
-        return items
+        return [first, second]
 
     def NUMBER(self, items):
         try:

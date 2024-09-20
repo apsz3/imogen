@@ -50,13 +50,13 @@ class Render:
                 _rimg_img: IMImage = _rimg.image
                 _real_img = self.create_image(_rimg_img)
                 if piped:
-                    print("Pipe!")
+                    print("(rep) pipe")
                     paste_x = 0
                     paste_y = 0
                 else:
                     paste_x = top_left.x + offset.x
                     paste_y = top_left.y + offset.y
-                print(f"write to {paste_x}, {paste_y}")
+                print(f"(rep) write to {paste_x}, {paste_y}")
                 img.paste(
                     _real_img,
                     (
@@ -114,13 +114,15 @@ class Render:
             offset = intermediate.offset
             # Position
             if piped:
-                paste_x = 0
-                paste_y = 0
+                print("(comp) piped")
+                # NOTE: YOU DO NEED THIS AND IT IS DIFFERENT THAN THE REPEATED VERSION!
+                paste_x = 0 + offset.x
+                paste_y = 0 + offset.y
                 # breakpoint()
             else:
                 paste_x = top_left.x + offset.x
                 paste_y = top_left.y + offset.y
-            print(f"write to {paste_x}, {paste_y}")
+            print(f"(comp) write to {paste_x}, {paste_y}")
 
             img.paste(
                 intermediate_image,

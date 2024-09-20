@@ -82,9 +82,9 @@ foo (512, 512) #white "" {
 
     |>
 -- Draw the vertical yellow bar
-    (vertical_bar_x, 20) [ (vertical_bar_width, flag_height) yellow "Vertical Bar" ]
+    (vertical_bar_x, 0) [ (vertical_bar_width, flag_height) yellow "Vertical Bar" ]
 
     |>
 -- Draw the horizontal yellow bar
-    (0, 20) [ (flag_width, horizontal_bar_height) yellow "Horizontal Bar" ]
+    (0, horizontal_bar_y) [ (flag_width, horizontal_bar_height) yellow "Horizontal Bar" ]
 }
