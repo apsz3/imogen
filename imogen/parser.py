@@ -82,10 +82,11 @@ class ImageTransformer(Transformer):
         return items[0]
 
     def NAME_REF(self, items):
+        # breakpoint()
         if (val := self.vars.get(items)) is not None:
             if isinstance(val, LocalVar):
                 return val.obj
-            return val  # An IMAGE
+            return val  # An IMAGE or Loop
         # raise ValueError(f"Variable {items} not found")
         self.vars[items.value] = None
 

@@ -77,6 +77,7 @@ class DeferredOperation:
 
     @staticmethod
     def Eval(arg, ctx):
+        # breakpoint()
         if isinstance(arg, DeferredOperation):
             return arg.evaluate(ctx)
         elif isinstance(arg, Point):
@@ -94,26 +95,26 @@ class DeferredOperation:
         # Check for the base cases before checking for
         # recursing on expressions
         if isinstance(self.left, LoopVar):
-            self.left = context.vars.get(self.left.name)
+            # FOR LOOP VARS YOU CANNOT JUST SET SELF.LEFT TO THE VALUE
+            # -- WE NEED TO RETAIN THE LOOPVAR OBJECT
+            # SO THAT WE LOOK UP THE VALUE EACH TIME!
+            left_value = context.vars.get(self.left.name).value
         elif isinstance(self.left, DeferredOperation):
-            self.left = self.left.evaluate(context)
+            # Deferred Operations, though, should they be set?
+            left_value = self.left.evaluate(context)
+        else:
+            left_value = self.left
 
         if isinstance(self.right, LoopVar):
-            self.right = context.vars.get(self.right.name)
+            right_value = context.vars.get(self.right.name).value
         elif isinstance(self.right, DeferredOperation):
-            self.right = self.right.evaluate(context)
+            right_value = self.right.evaluate(context)
+        else:
+            right_value = self.right
 
-        left_value = (
-            self.left.evaluate(context)
-            if isinstance(self.left, DeferredOperation)
-            else self.left
-        )
-        right_value = (
-            self.right.evaluate(context)
-            if isinstance(self.right, DeferredOperation)
-            else self.right
-        )
-        return self.operation(left_value, right_value)
+        res = self.operation(left_value, right_value)
+        print(self, "::", res)  # self.left, self.right, "=>", res)
+        return res
 
     # TODO: defer so that executing these values looks up the var value
     def __hash__(self):
@@ -165,7 +166,7 @@ class DeferredOperation:
         return DeferredOperation(self, other, lambda x, y: x >= y)
 
     def __int__(self):
-        return DeferredOperation(self, 0, lambda x: int(x))
+        return DeferredOperation(self, 0, lambda x, y: int(x))
 
 
 class LoopVar(DeferredOperation):
@@ -182,3 +183,4 @@ class LoopVar(DeferredOperation):
         self.left = self
         self.right = None
         self.operation = lambda x, _: x
+        self.value = None

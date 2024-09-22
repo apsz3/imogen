@@ -30,6 +30,7 @@ class Render:
         # Recall you must evaluate the deferred operation
         # as close to its usage as possible, which would be here
         image.size = DeferredOperation.Eval(image.size, self)
+        print(f"Creating image {image.name} with size {image.size.x}, {image.size.y}")
         img = Image.new("RGB", (image.size.x, image.size.y), image.color)
         draw = ImageDraw.Draw(img)
         draw.text((10, 10), image.text, fill=(0, 0, 0))
@@ -45,14 +46,15 @@ class Render:
         for i in range(repeated.count):
             # Generate all the images
             if repeated.loop_var:
-                self.vars[repeated.loop_var] = i
+                self.vars[repeated.loop_var].value = i
+                print("INCREMENTING LOOP VAR", i)
             _rimg: IntermediateImage
             for _rimg in repeated.body:
                 # HANDLE NESTING HERE
                 if isinstance(_rimg, Repeated):
                     top_left = self.do_repeated(_rimg, img, comp, top_left)
                     continue
-                piped = DeferredOperation.Eval(_rimg.piped, self)
+                piped = _rimg.piped
                 # Already has the repeat global offset
                 offset = DeferredOperation.Eval(_rimg.offset, self)
                 _rimg_img: IMImage = _rimg.image
@@ -103,7 +105,9 @@ class Render:
         for intermediate in composition.composition:
             intermediate_image = None
             if isinstance(intermediate, Repeated):
+                # breakpoint()
                 top_left = self.do_repeated(intermediate, img, composition, top_left)
+                # breakpoint()
                 continue
             elif isinstance(intermediate, Composition):
                 # Recurse if you have an existing composition TODO
@@ -120,7 +124,7 @@ class Render:
             # else:
             # raise ValueError("Invalid intermediate image")
             piped = DeferredOperation.Eval(intermediate.piped, self)
-            offset = DeferredOperation.Eval(intermediate.offset)
+            offset = DeferredOperation.Eval(intermediate.offset, self)
             # Position
             if piped:
                 print("(comp) piped")
