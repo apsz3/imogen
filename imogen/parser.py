@@ -116,10 +116,13 @@ class ImageTransformer(Transformer):
     def size(self, items):
         # Floating points from calculations must be coerced to integer
         # when specified as size!
-        if isinstance(items[0], DeferredOperation):
-            # Defer it
-            return Point(items[0], items[1])
-        return Point(int(items[0]), int(items[1]))
+        if isinstance(items[0], float):
+            raise ValueError("Size must be an integer")
+        return Point(items[0], items[1])
+        # if isinstance(items[0], LoopVar):
+        #     # Defer it
+        #     return Point(items[0], items[1])
+        # return Point(int(items[0]), int(items[1]))
 
     def color(self, items):
         print(items)
@@ -199,9 +202,9 @@ class ImageTransformer(Transformer):
             return float(items.value)
 
     def loop_var(self, items):
-        v = LoopVar(items[0])
-        self.vars[v.name] = v
-        return v
+        var = LoopVar(items[0])
+        self.vars[var.name] = var  # Unassigned as of now.
+        return var
 
     # Loop var needs to be assigned BEFORE we go into the body!
     def prepare_repeated(self, items):

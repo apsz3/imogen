@@ -22,6 +22,10 @@ class Render:
         self.metadata = metadata
         self.generated_images = {}
 
+    @property
+    def vars(self):
+        return self.metadata["vars"]
+
     def create_image(self, image: IMImage) -> Image:
         img = Image.new("RGB", (image.size.x, image.size.y), image.color)
         draw = ImageDraw.Draw(img)
@@ -31,22 +35,23 @@ class Render:
     def do_repeated(
         self, repeated: Repeated, img: Image, comp: Composition, top_left: Point
     ):
+        top_left = DeferredOperation.Eval(top_left, self)
         if repeated.piped:
             top_left = Point(0, 0)
         # breakpoint()
         for i in range(repeated.count):
             # Generate all the images
             if repeated.loop_var:
-                self.metadata[repeated.loop_var] = i
+                self.vars[repeated.loop_var] = i
             _rimg: IntermediateImage
             for _rimg in repeated.body:
                 # HANDLE NESTING HERE
                 if isinstance(_rimg, Repeated):
                     top_left = self.do_repeated(_rimg, img, comp, top_left)
                     continue
-
-                piped = _rimg.piped
-                offset = _rimg.offset  # Already has the repeat global offset
+                piped = DeferredOperation.Eval(_rimg.piped, self)
+                # Already has the repeat global offset
+                offset = DeferredOperation.Eval(_rimg.offset, self)
                 _rimg_img: IMImage = _rimg.image
                 _real_img = self.create_image(_rimg_img)
                 if piped:
