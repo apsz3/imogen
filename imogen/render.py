@@ -29,9 +29,14 @@ class Render:
     def create_image(self, image: IMImage) -> Image:
         # Recall you must evaluate the deferred operation
         # as close to its usage as possible, which would be here
-        image.size = DeferredOperation.Eval(image.size, self)
-        print(f"Creating image {image.name} with size {image.size.x}, {image.size.y}")
-        img = Image.new("RGB", (image.size.x, image.size.y), image.color)
+        # YOU CANNOT OVERWRITE DEFFERED OPERATION VALUES THEMSELVES.
+        # YOU NEED TO JUST GET A VALUE SIZE DIFFERENTLY!
+        # TODO: ANY ACCESSES OF AN OBJECT (image.name, image.size, etc)
+        # NEED TO BE ALWAYS ASSUMED TO BE DEFERRED OPERATIONS!
+        # FOR EXAMPLE, THE TEXT COULD CHANGE EACH LOOP ITERATION TOO!
+        size = DeferredOperation.Eval(image.size, self)
+        print(f"Creating image {image.name} with size {size.x}, {size.y}")
+        img = Image.new("RGB", (size.x, size.y), image.color)
         draw = ImageDraw.Draw(img)
         draw.text((10, 10), image.text, fill=(0, 0, 0))
         return img
@@ -58,12 +63,14 @@ class Render:
                 # Already has the repeat global offset
                 offset = DeferredOperation.Eval(_rimg.offset, self)
                 _rimg_img: IMImage = _rimg.image
+                size = DeferredOperation.Eval(_rimg_img.size, self)  # MUST EVAL IT HERE
                 _real_img = self.create_image(_rimg_img)
                 if piped:
                     print("(rep) pipe")
                     paste_x = 0
                     paste_y = 0
                 else:
+                    breakpoint()
                     paste_x = top_left.x + offset.x
                     paste_y = top_left.y + offset.y
                 print(f"(rep) write to {paste_x}, {paste_y}")
@@ -72,14 +79,14 @@ class Render:
                     (
                         paste_x,
                         paste_y,
-                        paste_x + _rimg_img.size.x,
-                        paste_y + _rimg_img.size.y,
+                        paste_x + size.x,
+                        paste_y + size.y,
                     ),
                 )
-                top_left.x = paste_x + _rimg_img.size.x
+                top_left.x = paste_x + size.x
                 if top_left.x >= comp.size.x:
                     top_left.x = 0
-                    top_left.y += _rimg_img.size.y
+                    top_left.y += size.y
                     if top_left.y >= comp.size.y:
                         print("Composition size exceeded... doing nothing though")
 

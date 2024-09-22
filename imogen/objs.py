@@ -1,11 +1,12 @@
+from __future__ import annotations
 import typing as t
 from dataclasses import dataclass
 
 
 @dataclass
 class Point:
-    x: int
-    y: int
+    x: int | DeferredOperation[int]
+    y: int | DeferredOperation[int]
 
     @property
     def as_tuple(self):
@@ -25,7 +26,7 @@ class Point:
 @dataclass
 class IMImage:
     name: str
-    size: Point
+    size: Point | DeferredOperation[Point]
     color: str
     text: str
     # piped : bool = False
@@ -33,7 +34,7 @@ class IMImage:
 
 @dataclass
 class IntermediateImage:
-    offset: Point
+    offset: Point | DeferredOperation[Point]
     piped: bool
     image: IMImage
 
