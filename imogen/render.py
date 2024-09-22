@@ -27,6 +27,9 @@ class Render:
         return self.metadata["vars"]
 
     def create_image(self, image: IMImage) -> Image:
+        # Recall you must evaluate the deferred operation
+        # as close to its usage as possible, which would be here
+        image.size = DeferredOperation.Eval(image.size, self)
         img = Image.new("RGB", (image.size.x, image.size.y), image.color)
         draw = ImageDraw.Draw(img)
         draw.text((10, 10), image.text, fill=(0, 0, 0))
@@ -84,6 +87,7 @@ class Render:
     # REPEATED THINGS ARE NOT RELATIVE -- THEY ARE NOT SCOPED! THEY ARE SCOPED TO THE PARENT COMPOSITION!
     # FOR SCOPING, USE COMPOSITIONS!
     def create_composition(self, composition: Composition) -> Image:
+        composition.size = DeferredOperation.Eval(composition.size, self)
         img = Image.new(
             "RGB", (composition.size.x, composition.size.y), composition.color
         )
@@ -115,8 +119,8 @@ class Render:
                 intermediate_image = self.create_image(intermediate.image)
             # else:
             # raise ValueError("Invalid intermediate image")
-            piped = intermediate.piped
-            offset = intermediate.offset
+            piped = DeferredOperation.Eval(intermediate.piped, self)
+            offset = DeferredOperation.Eval(intermediate.offset)
             # Position
             if piped:
                 print("(comp) piped")

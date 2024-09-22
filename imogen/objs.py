@@ -77,14 +77,17 @@ class DeferredOperation:
 
     @staticmethod
     def Eval(arg, ctx):
-        print(arg, "!")
         if isinstance(arg, DeferredOperation):
             return arg.evaluate(ctx)
         elif isinstance(arg, Point):
-            return Point(
+            p = Point(
                 DeferredOperation.Eval(arg.x, ctx), DeferredOperation.Eval(arg.y, ctx)
             )
-        return arg
+            print(p)
+            return p
+        elif type(arg) in [int, str, float, bool]:
+            return arg
+        raise ValueError(f"Havent processed deferred type of {type(arg)} (value {arg})")
 
     # Something like this..
     def evaluate(self, context):
