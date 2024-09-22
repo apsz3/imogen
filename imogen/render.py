@@ -70,7 +70,6 @@ class Render:
                     paste_x = 0
                     paste_y = 0
                 else:
-                    breakpoint()
                     paste_x = top_left.x + offset.x
                     paste_y = top_left.y + offset.y
                 print(f"(rep) write to {paste_x}, {paste_y}")
