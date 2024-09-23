@@ -87,7 +87,7 @@ class DeferredOperation:
             )
             print(p)
             return p
-        elif type(arg) in [int, str, float, bool]:
+        elif type(arg) in [int, str, float, bool, tuple]:
             return arg
         raise ValueError(f"Havent processed deferred type of {type(arg)} (value {arg})")
 

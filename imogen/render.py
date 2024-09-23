@@ -35,10 +35,14 @@ class Render:
         # NEED TO BE ALWAYS ASSUMED TO BE DEFERRED OPERATIONS!
         # FOR EXAMPLE, THE TEXT COULD CHANGE EACH LOOP ITERATION TOO!
         size = DeferredOperation.Eval(image.size, self)
+        text = str(
+            DeferredOperation.Eval(image.text, self)
+        )  # Have to convert for the PIL lib
+        color = DeferredOperation.Eval(image.color, self)
         print(f"Creating image {image.name} with size {size.x}, {size.y}")
-        img = Image.new("RGB", (size.x, size.y), image.color)
+        img = Image.new("RGB", (size.x, size.y), color)
         draw = ImageDraw.Draw(img)
-        draw.text((10, 10), image.text, fill=(0, 0, 0))
+        draw.text((10, 10), text, fill=(0, 0, 0))
         return img
 
     def do_repeated(

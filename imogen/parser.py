@@ -105,7 +105,6 @@ class ImageTransformer(Transformer):
     def image_spec_expr(self, items):
         size, color, text, composition_body = items
         # try:
-        text = text.strip('"')
         # except:
 
         # breakpoint()
@@ -140,7 +139,7 @@ class ImageTransformer(Transformer):
             raise ValueError(f"Invalid color {items}")
 
     def text(self, items):
-        return items[0]
+        return str(items[0]).strip('"')
 
     def composition_body(self, items):
         # Flatten any piped lists, which are returned as a tuple since
