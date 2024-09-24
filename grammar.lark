@@ -14,7 +14,9 @@ expr: expr "+" expr -> add
     | expr_attr
     | anonymous_image_expr
     | repeated
+    | "(" expr ")"
     | value
+
 
 expr_attr:  expr "." NAME
 
