@@ -8,6 +8,7 @@ class Point:
     x: int | DeferredOperation[int]
     y: int | DeferredOperation[int]
 
+    # TODO: loop variables with expressions as a point dont seem to work?
     @property
     def as_tuple(self):
         return (self.x, self.y)

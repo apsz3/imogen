@@ -118,6 +118,7 @@ class ImageTransformer(Transformer):
         # when specified as size!
         if isinstance(items[0], float):
             raise ValueError("Size must be an integer")
+
         return Point(items[0], items[1])
         # if isinstance(items[0], LoopVar):
         #     # Defer it

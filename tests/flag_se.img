@@ -1,6 +1,10 @@
 f (1000, 1000) #ffffff "" {
+    local a = 0
+    local b = 1
     (0, 0) repeat i:=5 {
-        (i*20, i*50) [(i*50, i*50) #ff00ff (i)]
+        local x = (a + b) * i * 20
+        (x*i*20, i*50) [(i*50, i*50) #red x]
 
     }
 }
+
