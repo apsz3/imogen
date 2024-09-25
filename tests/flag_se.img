@@ -21,3 +21,16 @@ f (1000, 1000) #ffffff "" {
     }
 }
 
+local t = (1000, 1000)
+local px = (64, 64)
+f (1000, 1000) #ffffff "" {
+    (0, 0) repeat j:=t.x//px.x {
+        (0, 0) repeat i:=t.y//px.y {
+            local x = i + j
+            local r = 255%(2*i + 2*j+1)+1
+            local g = 255%(2*i*j+1)+1
+            local b = 255%(2*i*j+1)+1
+            (0, 0) [px #(r,g,b) x]
+        }
+    }
+}
