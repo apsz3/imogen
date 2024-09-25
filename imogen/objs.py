@@ -1,6 +1,7 @@
 from __future__ import annotations
 import typing as t
 from dataclasses import dataclass
+from PIL import ImageColor
 
 
 @dataclass
@@ -22,6 +23,35 @@ class Point:
         if isinstance(other, Point):
             return Point(self.x * other.x, self.y * other.y)
         return Point(self.x * other, self.y * other)
+
+
+@dataclass
+class Color:
+    r: int | DeferredOperation[int]
+    g: int | DeferredOperation[int]
+    b: int | DeferredOperation[int]
+    a: int = 255
+
+    def __str__(self):
+        return f"rgba({self.r}, {self.g}, {self.b}, {self.a})"
+
+    @property
+    def as_tuple(self):
+        return (self.r, self.g, self.b, self.a)
+
+    @classmethod
+    def from_str(cls, s):
+        # if isinstance(items, list) and len(items) == 3:
+        #     return ImageColor.getrgb("rgb(" + ",".join(map(str, items)) + ")")
+        try:
+            return ImageColor.getrgb(s)
+        except ValueError:
+            pass
+        try:
+            # Limit to 6 characters here
+            return ImageColor.getrgb("#" + s)
+        except ValueError:
+            raise ValueError(f"Invalid color {s}")
 
 
 @dataclass
@@ -88,6 +118,15 @@ class DeferredOperation:
             )
             print(p)
             return p
+        elif isinstance(arg, Color):
+            c = Color(
+                DeferredOperation.Eval(arg.r, ctx),
+                DeferredOperation.Eval(arg.g, ctx),
+                DeferredOperation.Eval(arg.b, ctx),
+                DeferredOperation.Eval(arg.a, ctx),
+            )
+            print(c)
+            return c
         elif type(arg) in [int, str, float, bool, tuple]:
             return arg
         raise ValueError(f"Havent processed deferred type of {type(arg)} (value {arg})")
@@ -169,6 +208,9 @@ class DeferredOperation:
 
     def __int__(self):
         return DeferredOperation(self, 0, lambda x, y: int(x))
+
+    def __rmod__(self, other):
+        return DeferredOperation(other, self, lambda x, y: x % y)
 
 
 class LoopVar(DeferredOperation):

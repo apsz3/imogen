@@ -10,6 +10,7 @@ from imogen.objs import (
     LoopVar,
     Point,
     Repeated,
+    Color,
 )
 from pathlib import Path
 
@@ -125,19 +126,29 @@ class ImageTransformer(Transformer):
         #     return Point(items[0], items[1])
         # return Point(int(items[0]), int(items[1]))
 
+    def color_value_thing(self, items):
+        r, g, b, a = items
+        if a is None:
+            a = 0
+        return Color(r, g, b, a)
+
     def color(self, items):
-        print(items)
-        if isinstance(items, list) and len(items) == 3:
-            return ImageColor.getrgb("rgb(" + ",".join(map(str, items)) + ")")
-        try:
-            return ImageColor.getrgb(items[0])
-        except ValueError:
-            pass
-        try:
-            # Limit to 6 characters here
-            return ImageColor.getrgb("#" + items[0])
-        except ValueError:
-            raise ValueError(f"Invalid color {items}")
+        c = items[0]
+        if isinstance(c, Color):
+            return c
+        return Color.from_str(items[0])
+
+        # if isinstance(items, list) and len(items) == 3:
+        #     return ImageColor.getrgb("rgb(" + ",".join(map(str, items)) + ")")
+        # try:
+        #     return ImageColor.getrgb(items[0])
+        # except ValueError:
+        #     pass
+        # try:
+        #     # Limit to 6 characters here
+        #     return ImageColor.getrgb("#" + items[0])
+        # except ValueError:
+        #     raise ValueError(f"Invalid color {items}")
 
     def text(self, items):
         return str(items[0]).strip('"')
