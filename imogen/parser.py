@@ -33,9 +33,16 @@ def flatten(arg):
 
 from random import random
 
+
+def intfuck(x):
+    if isinstance(x, DeferredOperation):
+        return FnCall(int, [x], True)
+    return int(x)
+
+
 builtins = {
     "random": lambda: random(),
-    "int": lambda x: int(x),
+    "int": lambda x: intfuck(x),
     "str": lambda x: str(x),
 }
 
@@ -239,6 +246,7 @@ class ImageTransformer(Transformer):
     def fn_call(self, items):
         deferred, fn_obj, *args = items
         if deferred:
+            breakpoint()
             return DeferredOperation(
                 FnCall(fn_obj, args, True), None, lambda x, _: x.eval()
             )
@@ -248,5 +256,8 @@ class ImageTransformer(Transformer):
             return DeferredOperation(
                 FnCall(fn_obj, args, True), None, lambda x, _: x.eval()
             )
+        # This is ostensibly an optimizastion so we inline the value
+        # if there is nothing deferreda bout it, instead of
+        # evaluating it for every Deferred operation that might use it.
         return FnCall(fn_obj, args).eval()
         # return FnCall(fn_name, args)

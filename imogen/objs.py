@@ -109,9 +109,13 @@ class DeferredOperation:
 
     @staticmethod
     def Eval(arg, ctx):
+        if arg is None:
+            # In case you're evaluating left and right and one is None.
+            return arg
         # breakpoint()
         if isinstance(arg, DeferredOperation):
-            return arg.evaluate(ctx)
+            newval = arg.evaluate(ctx)
+            return DeferredOperation.Eval(newval, ctx)
         elif isinstance(arg, Point):
             p = Point(
                 DeferredOperation.Eval(arg.x, ctx), DeferredOperation.Eval(arg.y, ctx)
@@ -130,8 +134,8 @@ class DeferredOperation:
         elif type(arg) in [int, str, float, bool, tuple]:
             return arg
         elif isinstance(arg, FnCall):
+            # Evlauate args?
             return arg.eval()
-
         raise ValueError(f"Havent processed deferred type of {type(arg)} (value {arg})")
 
     # Something like this..
@@ -146,6 +150,12 @@ class DeferredOperation:
         elif isinstance(self.left, DeferredOperation):
             # Deferred Operations, though, should they be set?
             left_value = self.left.evaluate(context)
+        elif isinstance(self.left, FnCall):
+            next_value = self.left.eval()
+            if isinstance(next_value, DeferredOperation):
+                left_value = next_value.evaluate(context)
+            else:
+                left_value = next_value
         else:
             left_value = self.left
 
@@ -153,6 +163,12 @@ class DeferredOperation:
             right_value = context.vars.get(self.right.name).value
         elif isinstance(self.right, DeferredOperation):
             right_value = self.right.evaluate(context)
+        elif isinstance(self.right, FnCall):
+            next_value = self.right.eval()
+            if isinstance(next_value, DeferredOperation):
+                right_value = next_value.evaluate(context)
+            else:
+                right_value = next_value
         else:
             right_value = self.right
 
@@ -247,12 +263,30 @@ class FnCall:
         self.deferred = deferred
 
     def eval(self):
-        if self.deferred:
-            return DeferredOperation(self.fn_obj, self.args, lambda x, y: x(*y))
-        # Check if any args are deferred Fn Calls
-        elif any(isinstance(arg, FnCall) and arg.deferred for arg in self.args):
-            # Promote this call to deferred
-            return DeferredOperation(self.fn_obj, self.args, lambda x, y: x(*y))
-        elif any(isinstance(arg, DeferredOperation) for arg in self.args):
-            return DeferredOperation(self.fn_obj, self.args, lambda x, y: x(*y))
-        return self.fn_obj(*self.args)
+        # Need to return deferred operations when we evaluate since we do that in the xformer
+        # if self.deferred:
+        #     self.deferred = False  # For evaluation
+        #     return DeferredOperation(self.fn_obj, self.args, lambda x, y: x(*y))
+        # # Check if any args are deferred Fn Calls
+        # elif any(isinstance(arg, FnCall) and arg.deferred for arg in self.args):
+        #     self.deferred = False
+        #     # Promote this call to deferred
+        #     return DeferredOperation(self.fn_obj, self.args, lambda x, y: x(*y))
+        # elif any(isinstance(arg, DeferredOperation) for arg in self.args):
+        #     self.deferred = False
+        #     return DeferredOperation(self.fn_obj, self.args, lambda x, y: x(*y))
+        # Convert all args from deferred, as well as fn
+        # to their actual values:
+
+        args = []
+        fn = self.fn_obj
+        for i, arg in enumerate(self.args):
+            if isinstance(arg, DeferredOperation):
+                args.append(arg.evaluate(self))
+            elif isinstance(arg, FnCall):
+                args.append(arg.eval())
+            else:
+                args.append(arg)
+        if isinstance(self.fn_obj, DeferredOperation):
+            fn = self.fn_obj.evaluate(self)
+        return fn(*args)

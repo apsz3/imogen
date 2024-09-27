@@ -42,6 +42,7 @@ class Render:
         if not isinstance(color, tuple):
             color = color.as_tuple
         print(f"Creating image {image.name} with size {size.x}, {size.y}")
+        breakpoint()
         img = Image.new("RGB", (size.x, size.y), color)
         draw = ImageDraw.Draw(img)
         draw.text((10, 10), text, fill=(0, 0, 0))
@@ -70,6 +71,7 @@ class Render:
                 offset = DeferredOperation.Eval(_rimg.offset, self)
                 _rimg_img: IMImage = _rimg.image
                 size = DeferredOperation.Eval(_rimg_img.size, self)  # MUST EVAL IT HERE
+                breakpoint()
                 _real_img = self.create_image(_rimg_img)
                 if piped:
                     print("(rep) pipe")
