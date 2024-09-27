@@ -5,7 +5,8 @@ statement: image_decl | assgn_stmt
 image_decl: [LOCAL] named_image_decl
 assgn_stmt : LOCAL NAME "=" expr
 
-expr: expr "+" expr -> add
+expr: fn_call
+    | expr "+" expr -> add
     | expr "-" expr -> sub
     | expr "*" expr -> mul
     | expr "/" expr -> div
@@ -54,6 +55,8 @@ color_value_thing : "(" expr "," expr "," expr ["," expr] ")"
 color: "#" /[0-9a-fA-F]{6}/
     | "#" /[a-zA-Z]+/
     | "#" color_value_thing
+
+fn_call: NAME_REF "(" [expr ("," expr)*] ")"
 
 text: ESCAPED_STRING
 

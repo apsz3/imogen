@@ -228,3 +228,15 @@ class LoopVar(DeferredOperation):
         self.right = None
         self.operation = lambda x, _: x
         self.value = None
+
+
+class FnCall:
+    def __init__(self, fn_obj, args):
+        # FN obj is a function object (python)stored in vars
+        self.fn_obj = fn_obj
+        self.args = list(filter(lambda x: x is not None, args))
+
+    def eval(self):
+        if any(isinstance(arg, DeferredOperation) for arg in self.args):
+            return DeferredOperation(self.fn_obj, self.args, lambda x, y: x(*y))
+        return self.fn_obj(*self.args)

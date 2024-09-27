@@ -3,6 +3,7 @@ from PIL import ImageColor
 from imogen.objs import (
     Composition,
     DeferredOperation,
+    FnCall,
     IMImage,
     IntermediateImage,
     Local,
@@ -30,9 +31,19 @@ def flatten(arg):
             yield from flatten(sub)
 
 
+from random import random
+
+builtins = {
+    "random": lambda: random(),
+    "int": lambda x: int(x),
+    "str": lambda x: str(x),
+}
+
+
 class ImageTransformer(Transformer):
     def __init__(self):
         self.vars = {}
+        self.vars.update(builtins)
 
     def start(self, items):
         return items
@@ -224,3 +235,10 @@ class ImageTransformer(Transformer):
         # This cannot possibly work because of the TRANSFORMER CALCULATING IT AS IT WALKS!
         # TODO
         return Repeated(body, loop_var, count)
+
+    def fn_call(self, items):
+        fn_obj, *args = items
+        # Transformer-time evaluation unless its deferred in which case this
+        # returns a DeferredOperation object.
+        return FnCall(fn_obj, args).eval()
+        # return FnCall(fn_name, args)

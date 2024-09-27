@@ -176,7 +176,7 @@ local tile_size = (64, 64)
 colored_square square_size #ffffff "Colored Square" {
     local color = #red
     local tx = "foo"
-    (0, 0) repeat 8 {
+    (0, 0) repeat  e 8 {
         (0, 0) repeat 8 {
             (0, 0) repeat 8 {
                 (0, 0) [ (32, 32) green "brat" ]

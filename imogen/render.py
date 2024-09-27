@@ -38,7 +38,9 @@ class Render:
         text = str(
             DeferredOperation.Eval(image.text, self)
         )  # Have to convert for the PIL lib
-        color = DeferredOperation.Eval(image.color, self).as_tuple
+        color = DeferredOperation.Eval(image.color, self)
+        if not isinstance(color, tuple):
+            color = color.as_tuple
         print(f"Creating image {image.name} with size {size.x}, {size.y}")
         img = Image.new("RGB", (size.x, size.y), color)
         draw = ImageDraw.Draw(img)
