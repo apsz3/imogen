@@ -129,6 +129,9 @@ class DeferredOperation:
             return c
         elif type(arg) in [int, str, float, bool, tuple]:
             return arg
+        elif isinstance(arg, FnCall):
+            return arg.eval()
+
         raise ValueError(f"Havent processed deferred type of {type(arg)} (value {arg})")
 
     # Something like this..
@@ -156,6 +159,9 @@ class DeferredOperation:
         res = self.operation(left_value, right_value)
         print(self, "::", res)  # self.left, self.right, "=>", res)
         return res
+
+    def __call__(self, *args):
+        return DeferredOperation(self, args, lambda x, y: x(*y))
 
     # TODO: defer so that executing these values looks up the var value
     def __hash__(self):
@@ -231,12 +237,22 @@ class LoopVar(DeferredOperation):
 
 
 class FnCall:
-    def __init__(self, fn_obj, args):
+    def __init__(self, fn_obj, args, deferred=False):
         # FN obj is a function object (python)stored in vars
+        # So that FN Obj when parsing with operators and exprs
+        # can benefit from the defined ops in DeferredOperation
+
         self.fn_obj = fn_obj
         self.args = list(filter(lambda x: x is not None, args))
+        self.deferred = deferred
 
     def eval(self):
-        if any(isinstance(arg, DeferredOperation) for arg in self.args):
+        if self.deferred:
+            return DeferredOperation(self.fn_obj, self.args, lambda x, y: x(*y))
+        # Check if any args are deferred Fn Calls
+        elif any(isinstance(arg, FnCall) and arg.deferred for arg in self.args):
+            # Promote this call to deferred
+            return DeferredOperation(self.fn_obj, self.args, lambda x, y: x(*y))
+        elif any(isinstance(arg, DeferredOperation) for arg in self.args):
             return DeferredOperation(self.fn_obj, self.args, lambda x, y: x(*y))
         return self.fn_obj(*self.args)

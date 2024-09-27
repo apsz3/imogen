@@ -56,7 +56,10 @@ color: "#" /[0-9a-fA-F]{6}/
     | "#" /[a-zA-Z]+/
     | "#" color_value_thing
 
-fn_call: NAME_REF "(" [expr ("," expr)*] ")"
+DEFERRED: "~"
+// TODO GOTCHA
+// MAYBE OPERATORS NEED TO BE TERMINALS !!!!!!!!!!!!!!!!!!!!!!!
+fn_call: [DEFERRED] NAME_REF "(" [expr ("," expr)*] ")"
 
 text: ESCAPED_STRING
 

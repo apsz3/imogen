@@ -19,7 +19,7 @@ with open("C:/imogen/grammar.lark", "r") as fp:
     dsl_grammar = fp.read()
 
 # TODO: clean up grammar so its not ambigous with NAME / value stuff for now
-parser = Lark(dsl_grammar, start="start", parser="earley")
+parser = Lark(dsl_grammar, start="start", parser="earley", maybe_placeholders=True)
 
 
 # https://stackoverflow.com/a/73014859
@@ -237,8 +237,16 @@ class ImageTransformer(Transformer):
         return Repeated(body, loop_var, count)
 
     def fn_call(self, items):
-        fn_obj, *args = items
+        deferred, fn_obj, *args = items
+        if deferred:
+            return DeferredOperation(
+                FnCall(fn_obj, args, True), None, lambda x, _: x.eval()
+            )
         # Transformer-time evaluation unless its deferred in which case this
         # returns a DeferredOperation object.
+        elif any(isinstance(arg, DeferredOperation) for arg in args):
+            return DeferredOperation(
+                FnCall(fn_obj, args, True), None, lambda x, _: x.eval()
+            )
         return FnCall(fn_obj, args).eval()
         # return FnCall(fn_name, args)
