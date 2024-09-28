@@ -118,7 +118,10 @@ class DeferredOperation:
             # always gotta recurse
             res = arg.eval()
             return DeferredOperation.Eval(res, ctx)
-
+        elif callable(arg):
+            # always gotta recurse
+            res = arg()
+            return DeferredOperation.Eval(res, ctx)
         elif isinstance(arg, DeferredOperation):
             newval = arg.evaluate(ctx)
             return DeferredOperation.Eval(newval, ctx)

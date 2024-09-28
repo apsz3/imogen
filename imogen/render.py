@@ -2,12 +2,17 @@ from PIL import Image, ImageDraw
 from imogen.objs import (
     Composition,
     DeferredOperation,
+    FnCall,
     IMImage,
     IntermediateImage,
     Local,
+    LocalVar,
+    LoopVar,
     Point,
     Repeated,
 )
+
+from copy import deepcopy
 
 
 class Render:
@@ -62,11 +67,22 @@ class Render:
                 self.vars[repeated.loop_var].value = i
                 print("INCREMENTING LOOP VAR", i)
             _rimg: IntermediateImage
+            # CURSED:
+            # GO ACCESS EVERY VARIABLE, STORE THE VALUE OF IT,
+            # EVALUATE THE BODY, THEN RESTORE THE VALUE
+            # previous_vars = deepcopy(self.vars)
+            # for v in self.vars:
+            #     if isinstance(self.vars[v], LocalVar):
+            #         self.vars[v].obj = DeferredOperation.Eval(self.vars[v].obj, self)
+            # self.metadata["vars"] = previous_vars
+
             for _rimg in repeated.body:
                 # HANDLE NESTING HERE
                 if isinstance(_rimg, Repeated):
+
                     top_left = self.do_repeated(_rimg, img, comp, top_left)
                     continue
+
                 piped = _rimg.piped
                 # Already has the repeat global offset
                 offset = DeferredOperation.Eval(_rimg.offset, self)

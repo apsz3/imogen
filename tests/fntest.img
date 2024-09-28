@@ -14,7 +14,6 @@ f (1000, 1000) #ffffff "" {
             -- local g = -- (i * 70 + j * 20) % 256
             -- local b = -- (i * 90 + j * 10) % 256
             local x = "3" --  str(~random() * 10)
-            local x = r
             (0, 0) [px #(r,g,b) x]
         }
     }
