@@ -115,8 +115,9 @@ class DeferredOperation:
         # breakpoint()
         # CHECK FOR GENERIC THING LAST!!!!!!!!!!!
         if isinstance(arg, FnCall):
-            # Evlauate args?
-            return arg.eval()
+            # always gotta recurse
+            res = arg.eval()
+            return DeferredOperation.Eval(res, ctx)
 
         elif isinstance(arg, DeferredOperation):
             newval = arg.evaluate(ctx)
@@ -136,9 +137,10 @@ class DeferredOperation:
             )
             print(c)
             return c
-        elif type(arg) in [int, str, float, bool, tuple]:
+        elif type(arg) in [int, str, float, bool]:
             return arg
-
+        elif type(arg) in [tuple]:
+            return tuple(DeferredOperation.Eval(a, ctx) for a in arg)
         raise ValueError(f"Havent processed deferred type of {type(arg)} (value {arg})")
 
     # Something like this..

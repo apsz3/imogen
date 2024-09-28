@@ -43,6 +43,7 @@ class Render:
         if not isinstance(color, tuple):
             color = color.as_tuple
         print(f"Creating image {image.name} with size {size.x}, {size.y}")
+        #        breakpoint()
         img = Image.new("RGB", (size.x, size.y), color)
         draw = ImageDraw.Draw(img)
         draw.text((10, 10), text, fill=(0, 0, 0))

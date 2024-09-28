@@ -41,13 +41,8 @@ from random import random
 #     return int(x)
 
 
-def fuckshit():
-    res = random()
-    return res
-
-
 builtins = {
-    "random": lambda: fuckshit(),
+    "random": lambda: random(),
     "int": lambda x: DeferredOperation(x, None, lambda x, _: int(x)),
     "str": lambda x: str(x),
 }
