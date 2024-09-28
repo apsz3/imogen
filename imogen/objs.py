@@ -153,7 +153,7 @@ class DeferredOperation:
         elif isinstance(self.left, FnCall):
 
             left_value = self.left.eval()
-            breakpoint()
+        #            breakpoint()
         # MUST CHECK FN CALL AND ALL OTHER CHILDREN BEFORE THE PARENT DEFERRED
         # OPERATION
         elif isinstance(self.left, DeferredOperation):
@@ -184,7 +184,7 @@ class DeferredOperation:
         return hash(self.name)
 
     def __int__(self):
-        return DeferredOperation(self, 0, lambda x, y: int(x))
+        raise ValueError("Can't convert deferred operation to int")
 
     def __add__(self, other):
         return DeferredOperation(self, other, lambda x, y: x + y)
