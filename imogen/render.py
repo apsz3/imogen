@@ -39,6 +39,7 @@ class Render:
             DeferredOperation.Eval(image.text, self)
         )  # Have to convert for the PIL lib
         color = DeferredOperation.Eval(image.color, self)
+        print(">>>>", color)
         if not isinstance(color, tuple):
             color = color.as_tuple
         print(f"Creating image {image.name} with size {size.x}, {size.y}")
@@ -102,10 +103,9 @@ class Render:
     # REPEATED THINGS ARE NOT RELATIVE -- THEY ARE NOT SCOPED! THEY ARE SCOPED TO THE PARENT COMPOSITION!
     # FOR SCOPING, USE COMPOSITIONS!
     def create_composition(self, composition: Composition) -> Image:
-        composition.size = DeferredOperation.Eval(composition.size, self)
-        img = Image.new(
-            "RGB", (composition.size.x, composition.size.y), composition.color
-        )
+        size = DeferredOperation.Eval(composition.size, self)
+        color = DeferredOperation.Eval(composition.color, self)
+        img = Image.new("RGB", (size.x, size.y), color)
         top_left = Point(0, 0)
 
         # Insert repeated image code into the middle of the composition list where it appears
@@ -160,10 +160,10 @@ class Render:
                 ),
             )
             top_left.x = paste_x + intermediate.image.size.x
-            if top_left.x >= composition.size.x:
+            if top_left.x >= size.x:
                 top_left.x = 0
                 top_left.y += intermediate.image.size.y
-                if top_left.y >= composition.size.y:
+                if top_left.y >= size.y:
                     print("Composition size exceeded... doing nothing though")
         return img
 

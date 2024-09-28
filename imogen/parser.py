@@ -40,8 +40,13 @@ def intfuck(x):
     return int(x)
 
 
+def fuckshit():
+    res = random()
+    return res
+
+
 builtins = {
-    "random": lambda: random(),
+    "random": lambda: fuckshit(),
     "int": lambda x: intfuck(x),
     "str": lambda x: str(x),
 }
@@ -254,4 +259,6 @@ class ImageTransformer(Transformer):
         if deferred:
             return obj
         else:
+            # NOTE any prints will to_str it!
+            # print("not deferred", obj)
             return obj.eval()
