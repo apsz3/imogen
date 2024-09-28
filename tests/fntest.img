@@ -1,6 +1,6 @@
 
 local t = (1000, 1000)
-local px = (10, 10)
+local px = (100, 100)
 f (1000, 1000) #ffffff "" {
     (0, 0) repeat j:=t.x//px.x {
         local r = int(~random() * 256)
@@ -14,6 +14,7 @@ f (1000, 1000) #ffffff "" {
             -- local g = -- (i * 70 + j * 20) % 256
             -- local b = -- (i * 90 + j * 10) % 256
             local x = "3" --  str(~random() * 10)
+            local x = r
             (0, 0) [px #(r,g,b) x]
         }
     }
