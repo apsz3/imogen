@@ -135,6 +135,7 @@ class DeferredOperation:
             return arg
         elif isinstance(arg, FnCall):
             # Evlauate args?
+            # breakpoint()
             return arg.eval()
         raise ValueError(f"Havent processed deferred type of {type(arg)} (value {arg})")
 
@@ -147,28 +148,22 @@ class DeferredOperation:
             # -- WE NEED TO RETAIN THE LOOPVAR OBJECT
             # SO THAT WE LOOK UP THE VALUE EACH TIME!
             left_value = context.vars.get(self.left.name).value
+        elif isinstance(self.left, FnCall):
+            left_value = self.left.eval()
+        # MUST CHECK FN CALL AND ALL OTHER CHILDREN BEFORE THE PARENT DEFERRED
+        # OPERATION
         elif isinstance(self.left, DeferredOperation):
             # Deferred Operations, though, should they be set?
             left_value = self.left.evaluate(context)
-        elif isinstance(self.left, FnCall):
-            next_value = self.left.eval()
-            if isinstance(next_value, DeferredOperation):
-                left_value = next_value.evaluate(context)
-            else:
-                left_value = next_value
         else:
             left_value = self.left
 
         if isinstance(self.right, LoopVar):
             right_value = context.vars.get(self.right.name).value
+        elif isinstance(self.right, FnCall):
+            right_value = self.right.eval()
         elif isinstance(self.right, DeferredOperation):
             right_value = self.right.evaluate(context)
-        elif isinstance(self.right, FnCall):
-            next_value = self.right.eval()
-            if isinstance(next_value, DeferredOperation):
-                right_value = next_value.evaluate(context)
-            else:
-                right_value = next_value
         else:
             right_value = self.right
 
@@ -182,6 +177,9 @@ class DeferredOperation:
     # TODO: defer so that executing these values looks up the var value
     def __hash__(self):
         return hash(self.name)
+
+    def __int__(self):
+        return DeferredOperation(self, 0, lambda x, y: int(x))
 
     def __add__(self, other):
         return DeferredOperation(self, other, lambda x, y: x + y)
@@ -252,7 +250,7 @@ class LoopVar(DeferredOperation):
         self.value = None
 
 
-class FnCall:
+class FnCall(DeferredOperation):
     def __init__(self, fn_obj, args, deferred=False):
         # FN obj is a function object (python)stored in vars
         # So that FN Obj when parsing with operators and exprs
@@ -262,7 +260,17 @@ class FnCall:
         self.args = list(filter(lambda x: x is not None, args))
         self.deferred = deferred
 
+        if self.deferred:
+            self.name = self.fn_obj.__name__
+            self.left = self
+            self.right = None
+            self.operation = lambda x, _: x.eval()  # self.eval()
+            self.value = None
+
     def eval(self):
+        # This shouldn't be called unless we're unpacking something deferred,
+        # or are not defferred ourselves.
+        # return self.fn_obj(*self.args)
         # Need to return deferred operations when we evaluate since we do that in the xformer
         # if self.deferred:
         #     self.deferred = False  # For evaluation
@@ -272,21 +280,21 @@ class FnCall:
         #     self.deferred = False
         #     # Promote this call to deferred
         #     return DeferredOperation(self.fn_obj, self.args, lambda x, y: x(*y))
-        # elif any(isinstance(arg, DeferredOperation) for arg in self.args):
-        #     self.deferred = False
+        # if any(isinstance(arg, DeferredOperation) for arg in self.args):
+        #     #     self.deferred = False
         #     return DeferredOperation(self.fn_obj, self.args, lambda x, y: x(*y))
+        # else:
+        args = [
+            arg.Eval(arg, self) if isinstance(arg, DeferredOperation) else arg
+            for arg in self.args
+        ]
+        if isinstance(self.fn_obj, DeferredOperation):
+            fn = DeferredOperation.Eval(self.fn_obj, self)
+        else:
+            fn = self.fn_obj
+        res = fn(*args)
+        return res
+
         # Convert all args from deferred, as well as fn
         # to their actual values:
-
-        args = []
-        fn = self.fn_obj
-        for i, arg in enumerate(self.args):
-            if isinstance(arg, DeferredOperation):
-                args.append(arg.evaluate(self))
-            elif isinstance(arg, FnCall):
-                args.append(arg.eval())
-            else:
-                args.append(arg)
-        if isinstance(self.fn_obj, DeferredOperation):
-            fn = self.fn_obj.evaluate(self)
-        return fn(*args)
+        pass

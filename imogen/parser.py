@@ -47,6 +47,11 @@ builtins = {
 }
 
 
+# Instead of passing None, pass that
+class UndefinedVariable:
+    pass
+
+
 class ImageTransformer(Transformer):
     def __init__(self):
         self.vars = {}
@@ -107,7 +112,7 @@ class ImageTransformer(Transformer):
                 return val.obj
             return val  # An IMAGE or Loop
         # raise ValueError(f"Variable {items} not found")
-        self.vars[items.value] = None
+        self.vars[items.value] = UndefinedVariable()
 
     def INT(self, items):
         return int(items.value)
@@ -244,20 +249,9 @@ class ImageTransformer(Transformer):
         return Repeated(body, loop_var, count)
 
     def fn_call(self, items):
-        deferred, fn_obj, *args = items
+        deferred, fn, *args = items
+        obj = FnCall(fn, args, deferred)
         if deferred:
-            breakpoint()
-            return DeferredOperation(
-                FnCall(fn_obj, args, True), None, lambda x, _: x.eval()
-            )
-        # Transformer-time evaluation unless its deferred in which case this
-        # returns a DeferredOperation object.
-        elif any(isinstance(arg, DeferredOperation) for arg in args):
-            return DeferredOperation(
-                FnCall(fn_obj, args, True), None, lambda x, _: x.eval()
-            )
-        # This is ostensibly an optimizastion so we inline the value
-        # if there is nothing deferreda bout it, instead of
-        # evaluating it for every Deferred operation that might use it.
-        return FnCall(fn_obj, args).eval()
-        # return FnCall(fn_name, args)
+            return obj
+        else:
+            return obj.eval()
