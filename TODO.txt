@@ -1,0 +1,18 @@
+Side Effects:
+* loop var
+* random and file/io:
+
+Expressions that get re-executed in their lifetime need to have their value assigned to a
+temporary value in their scope and all references IN that scope use it.
+When it goes out of scope, reset it to the generating expression, so that we can
+re-gen things.
+
+
+x Add random
+
+Add tags and attachable metadata to objects
+
+Render objects to a JSON manifest with metadata and paths to the objects
+
+`script` tag that indicates the file should not run but can be called.
+    We need this to signal deferred execution but not ignored execution like `local`
