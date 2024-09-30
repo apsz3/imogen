@@ -70,17 +70,28 @@ class Render:
             # CURSED:
             # GO ACCESS EVERY VARIABLE, STORE THE VALUE OF IT,
             # EVALUATE THE BODY, THEN RESTORE THE VALUE
-            # previous_vars = deepcopy(self.vars)
-            # for v in self.vars:
-            #     if isinstance(self.vars[v], LocalVar):
-            #         self.vars[v].obj = DeferredOperation.Eval(self.vars[v].obj, self)
-            # self.metadata["vars"] = previous_vars
 
             for _rimg in repeated.body:
+
                 # HANDLE NESTING HERE
                 if isinstance(_rimg, Repeated):
+                    # BASICALLY WE ARE JUST PUSHING SCOPE HERE.
+                    # TODO: STANDARDIZE OUTSIDE OF REPEATS.
+                    previous_vars = deepcopy(self.vars)
+                    for v in self.vars:
+                        # Evaluate all the vars here
+                        if isinstance(self.vars[v], LocalVar):
+                            # Here we go from (possibly) deferred, to executed
+                            self.vars[v].obj = DeferredOperation.Eval(
+                                self.vars[v].obj, self
+                            )
+                        # Nothing to do for Loop vars, they get handled properly later.
+                        elif isinstance(self.vars[v], LoopVar):
+                            pass
 
                     top_left = self.do_repeated(_rimg, img, comp, top_left)
+                    # Now restore it!
+                    self.metadata["vars"] = previous_vars
                     continue
 
                 piped = _rimg.piped
