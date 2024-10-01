@@ -61,37 +61,31 @@ class Render:
         if repeated.piped:
             top_left = Point(0, 0)
         # breakpoint()
+
+        # BASICALLY WE ARE JUST PUSHING SCOPE HERE.
+        # TODO: STANDARDIZE OUTSIDE OF REPEATS.
+        previous_vars = deepcopy(self.vars)
+
+        for v in self.vars:
+            # Evaluate all the vars here
+            if isinstance(self.vars[v], LocalVar):
+                # Here we go from (possibly) deferred, to executed
+                self.vars[v].obj = DeferredOperation.Eval(self.vars[v].obj, self)
+            # Nothing to do for Loop vars, they get handled properly later.
+            elif isinstance(self.vars[v], LoopVar):
+                pass
+
         for i in range(repeated.count):
             # Generate all the images
             if repeated.loop_var:
                 self.vars[repeated.loop_var].value = i
                 print("INCREMENTING LOOP VAR", i)
             _rimg: IntermediateImage
-            # CURSED:
-            # GO ACCESS EVERY VARIABLE, STORE THE VALUE OF IT,
-            # EVALUATE THE BODY, THEN RESTORE THE VALUE
-
             for _rimg in repeated.body:
 
                 # HANDLE NESTING HERE
                 if isinstance(_rimg, Repeated):
-                    # BASICALLY WE ARE JUST PUSHING SCOPE HERE.
-                    # TODO: STANDARDIZE OUTSIDE OF REPEATS.
-                    previous_vars = deepcopy(self.vars)
-                    for v in self.vars:
-                        # Evaluate all the vars here
-                        if isinstance(self.vars[v], LocalVar):
-                            # Here we go from (possibly) deferred, to executed
-                            self.vars[v].obj = DeferredOperation.Eval(
-                                self.vars[v].obj, self
-                            )
-                        # Nothing to do for Loop vars, they get handled properly later.
-                        elif isinstance(self.vars[v], LoopVar):
-                            pass
-
                     top_left = self.do_repeated(_rimg, img, comp, top_left)
-                    # Now restore it!
-                    self.metadata["vars"] = previous_vars
                     continue
 
                 piped = _rimg.piped
@@ -124,7 +118,7 @@ class Render:
                     top_left.y += size.y
                     if top_left.y >= comp.size.y:
                         print("Composition size exceeded... doing nothing though")
-
+        self.metadata["vars"] = previous_vars
         return top_left
 
     # Write code that will take a Composition object and create a PIL image

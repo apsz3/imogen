@@ -42,7 +42,7 @@ from random import random
 
 
 builtins = {
-    "random": lambda: random(),
+    "random": random,
     "int": lambda x: DeferredOperation(x, None, lambda x, _: int(x)),
     "str": lambda x: str(x),
 }
@@ -188,6 +188,7 @@ class ImageTransformer(Transformer):
                 # TODO: flatten?
                 new.extend(flatten(item))
             elif isinstance(item, LocalVar):
+                breakpoint()
                 # Transformer will already have visited and computed this.
                 pass
             else:

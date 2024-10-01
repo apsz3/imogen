@@ -155,6 +155,8 @@ class DeferredOperation:
             # -- WE NEED TO RETAIN THE LOOPVAR OBJECT
             # SO THAT WE LOOK UP THE VALUE EACH TIME!
             left_value = context.vars.get(self.left.name).value
+        elif isinstance(self.left, LocalVar):
+            left_value = context.vars.get(self.left.varname).obj
         elif isinstance(self.left, FnCall):
 
             left_value = self.left.eval()
@@ -169,6 +171,8 @@ class DeferredOperation:
 
         if isinstance(self.right, LoopVar):
             right_value = context.vars.get(self.right.name).value
+        elif isinstance(self.right, LocalVar):
+            right_value = context.vars.get(self.right.varname).obj
         elif isinstance(self.right, FnCall):
             right_value = self.right.eval()
         elif isinstance(self.right, DeferredOperation):
