@@ -2,10 +2,10 @@
 local t = (1000, 1000)
 local px = (100, 100)
 f (1000, 1000) #ffffff "" {
-    (0, 0) repeat j:=1 {
+    (0, 0) repeat j:=2 {
         local r = int(~random() * 256)
-        local g = int(~random() * 256)
-        local b = int(~random() * 256)
+        local g = int(random() * 256)
+        local b = int(random() * 256)
         local x = ~str(~random() * 10)
         (0, 0) repeat i:=t.y//px.y {
       --      local r = int(~random() * 256)

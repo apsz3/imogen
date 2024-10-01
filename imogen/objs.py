@@ -240,8 +240,8 @@ class DeferredOperation:
     def __ge__(self, other):
         return DeferredOperation(self, other, lambda x, y: x >= y)
 
-    def __int__(self):
-        return DeferredOperation(self, 0, lambda x, y: int(x))
+    # def __int__(self):
+    #     return DeferredOperation(self, 0, lambda x, y: int(x))
 
     def __rmod__(self, other):
         return DeferredOperation(other, self, lambda x, y: x % y)

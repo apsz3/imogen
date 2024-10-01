@@ -40,9 +40,16 @@ class Render:
         # NEED TO BE ALWAYS ASSUMED TO BE DEFERRED OPERATIONS!
         # FOR EXAMPLE, THE TEXT COULD CHANGE EACH LOOP ITERATION TOO!
         size = DeferredOperation.Eval(image.size, self)
-        text = str(
-            DeferredOperation.Eval(image.text, self)
-        )  # Have to convert for the PIL lib
+        dd = DeferredOperation.Eval(image.text, self)
+        # Have to convert for the PIL lib
+        # if isinstance(dd, DeferredOperation):
+        #     breakpoint()
+        # else:
+        #     if not isinstance(dd, int):
+        #         breakpoint()
+        # breakpoint()
+        text = str(dd)
+        # print("!!", dd)
         color = DeferredOperation.Eval(image.color, self)
         print(">>>>", color)
         if not isinstance(color, tuple):
@@ -71,6 +78,10 @@ class Render:
             if isinstance(self.vars[v], LocalVar):
                 # Here we go from (possibly) deferred, to executed
                 self.vars[v].obj = DeferredOperation.Eval(self.vars[v].obj, self)
+                assert not isinstance(self.vars[v].obj, LocalVar)
+                assert not isinstance(self.vars[v].obj, LoopVar)
+                assert not isinstance(self.vars[v].obj, DeferredOperation)
+                assert not isinstance(self.vars[v].obj, FnCall)
             # Nothing to do for Loop vars, they get handled properly later.
             elif isinstance(self.vars[v], LoopVar):
                 pass
@@ -84,9 +95,11 @@ class Render:
             for _rimg in repeated.body:
 
                 # HANDLE NESTING HERE
+                previous_previous = deepcopy(previous_vars)
                 if isinstance(_rimg, Repeated):
                     top_left = self.do_repeated(_rimg, img, comp, top_left)
                     continue
+                previous_vars = previous_previous
 
                 piped = _rimg.piped
                 # Already has the repeat global offset

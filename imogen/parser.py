@@ -175,7 +175,12 @@ class ImageTransformer(Transformer):
         #     raise ValueError(f"Invalid color {items}")
 
     def text(self, items):
-        return str(items[0]).strip('"')
+        # Careful not to use the overloaded __str__ on DeferreDoperation
+        # which actually just dumps the dataclass!
+        if not isinstance(items, DeferredOperation):
+            return str(items[0]).strip('"')
+        # TODO: THIS DOESNT WORK.
+        return items
 
     def composition_body(self, items):
         # Flatten any piped lists, which are returned as a tuple since
@@ -188,8 +193,8 @@ class ImageTransformer(Transformer):
                 # TODO: flatten?
                 new.extend(flatten(item))
             elif isinstance(item, LocalVar):
-                breakpoint()
-                # Transformer will already have visited and computed this.
+                # Transformer will already have visited and computed this,
+                # and we arent interseted in storing expressions or variables here
                 pass
             else:
                 new.append(item)
