@@ -156,6 +156,8 @@ class DeferredOperation:
             # SO THAT WE LOOK UP THE VALUE EACH TIME!
             left_value = context.vars.get(self.left.name).value
         elif isinstance(self.left, LocalVar):
+            # TODO: WHY IS THIS NEVER CALELD HERE
+            breakpoint()
             left_value = context.vars.get(self.left.varname).obj
         elif isinstance(self.left, FnCall):
 
