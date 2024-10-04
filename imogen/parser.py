@@ -15,7 +15,7 @@ from imogen.objs import (
 )
 from pathlib import Path
 
-with open("C:/imogen/grammar.lark", "r") as fp:
+with open(Path(__file__).parent / "grammar.lark", "r") as fp:
     dsl_grammar = fp.read()
 
 # TODO: clean up grammar so its not ambigous with NAME / value stuff for now
