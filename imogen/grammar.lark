@@ -1,0 +1,77 @@
+start: statement*
+
+statement: image_decl | assgn_stmt
+
+image_decl: [LOCAL] named_image_decl
+assgn_stmt : LOCAL NAME "=" expr
+
+expr: fn_call
+    | expr "+" expr -> add
+    | expr "-" expr -> sub
+    | expr "*" expr -> mul
+    | expr "/" expr -> div
+    | expr "%" expr -> mod
+    | expr "//" expr -> intdiv
+    | expr_attr
+    | anonymous_image_expr
+    | repeated
+    | "(" expr ")"
+    | value
+
+
+expr_attr:  expr "." NAME
+
+repeated: "repeat" [loop_var ":=" ] expr "{" composition_body "}" -> prepare_repeated
+
+loop_var: NAME
+
+value: NUMBER | NAME_REF | size | color | text
+
+LOCAL: "local"
+
+// EXPR alone WONT WORK HERE FOR VAIOUS REAONS
+?value_or_qtd_expr: value | expr_attr | "(" expr ")"
+image_spec_expr: value_or_qtd_expr value_or_qtd_expr value_or_qtd_expr ["{" composition_body "}"]
+
+anonymous_image_expr: "[" image_spec_expr "]"
+
+named_image_decl: NAME image_spec_expr
+
+// The issue here is that a PT REF wont parse, it parses and grabs the things
+// on the next line.
+composition_ref: expr NAME_REF  -> composition_ref_img
+                | expr anonymous_image_expr -> composition_ref_anon_img
+                | piped_composition_ref
+                | expr repeated -> composition_repeated_img
+                | assgn_stmt
+
+piped_composition_ref: composition_ref "|>" composition_ref
+
+composition_body: composition_ref*
+
+size: "(" expr "," expr ")"
+// TODO overloading expr here isnt a great idea
+color_value_thing : "(" expr "," expr "," expr ["," expr] ")"
+color: "#" /[0-9a-fA-F]{6}/
+    | "#" /[a-zA-Z]+/
+    | "#" color_value_thing
+
+DEFERRED: "~"
+// TODO GOTCHA
+// MAYBE OPERATORS NEED TO BE TERMINALS !!!!!!!!!!!!!!!!!!!!!!!
+fn_call: [DEFERRED] NAME_REF "(" [expr ("," expr)*] ")"
+
+text: ESCAPED_STRING
+
+NAME: /[a-zA-Z_][a-zA-Z0-9_]*/
+NAME_REF: NAME
+
+COMMENT: "--" /[^\n]*/x
+
+%ignore COMMENT
+
+%import common.INT
+%import common.ESCAPED_STRING
+%import common.WS
+%import common.NUMBER
+%ignore WS

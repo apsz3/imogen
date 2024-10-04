@@ -1,0 +1,19 @@
+param scale_factor = 1.0
+-- do you texture first, and cut out after? or cut out and build final shape, then texture?
+local px = (512, 512) * scale_factor
+local wood_tex = load #/path/to/thing
+
+local roof :fill #transparent "" {
+      local tri_height_px = px.y/3
+      local tri_width_px = px.x
+      local mask triangle MyTriangle (tri_width_px, tri_height_px)
+
+enum zone {
+foo, bgar, baz}
+
+-- for chainging albedo on a texture, make it a property of the texture
+door px.x/3,px.y wood_tex "" : {
+     -- @ gets exported
+     @zone = walkable
+}
+
