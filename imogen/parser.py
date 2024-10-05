@@ -43,7 +43,8 @@ from random import random
 
 builtins = {
     "random": random,
-    "int": lambda x: DeferredOperation(x, None, lambda x, _: int(x)),
+    # "int": lambda x: DeferredOperation(x, None, lambda x, _: int(x)),
+    "int": lambda x: int(x),
     "str": lambda x: str(x),
 }
 
