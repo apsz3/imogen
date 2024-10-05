@@ -117,7 +117,18 @@ local z = (0, 0)
 
 local t = (1000, 1000)
 local px = (10, 10)
+-- alternating row squares
 f (1000, 1000) #ffffff "" {
-    (50, 50) [ (50, 50) #(int(~random()*256), int(random()*256), int(random()*256)) (str(random()*10)) ]
+    (0, 0) repeat j:=10 {
+       (0,px.y*j) repeat i:=10 {
+            local r = int(~random() * 256)
+            local g = int(~random() * 256)
+            local b = int(~random() * 256)
+            local x = str(~random() * 10)
+            (0, 0) [px #(r,g,b) x]
+
+        }
+    }
+
 }
 
