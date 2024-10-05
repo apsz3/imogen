@@ -114,6 +114,7 @@ class DeferredOperation:
             return arg
         # breakpoint()
         # CHECK FOR GENERIC THING LAST!!!!!!!!!!!
+
         if isinstance(arg, FnCall):
             # always gotta recurse
             res = arg.eval()
@@ -157,7 +158,7 @@ class DeferredOperation:
             left_value = context.vars.get(self.left.name).value
         elif isinstance(self.left, LocalVar):
             # TODO: WHY IS THIS NEVER CALELD HERE
-            breakpoint()
+            # breakpoint()
             left_value = context.vars.get(self.left.varname).obj
         elif isinstance(self.left, FnCall):
 
@@ -183,6 +184,9 @@ class DeferredOperation:
             right_value = self.right
 
         res = self.operation(left_value, right_value)
+        if res is None:
+            breakpoint()
+            raise ValueError("Why is it none")
         print(self, "::", res)  # self.left, self.right, "=>", res)
         return res
 
