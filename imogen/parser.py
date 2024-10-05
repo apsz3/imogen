@@ -34,17 +34,18 @@ def flatten(arg):
 from random import random
 
 
-# def intfuck(x):
-#     if isinstance(x, DeferredOperation):
-#         val = DeferredOperation.Eval(x, None)
-#         return FnCall(lambda x: int(x), [val], True)
-#     return int(x)
+def intfuck(x):
+    if isinstance(x, DeferredOperation):
+        val = DeferredOperation.Eval(x, None)
+        return FnCall(lambda x: int(x), [val], True)
+    return int(x)
 
 
 builtins = {
     "random": random,
+    "int": lambda x: intfuck(x),
     # "int": lambda x: DeferredOperation(x, None, lambda x, _: int(x)),
-    "int": lambda x: int(x),
+    # "int": lambda x: int(x),
     "str": lambda x: str(x),
 }
 
