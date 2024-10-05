@@ -1,0 +1,123 @@
+
+local se_blue = #005293
+local se_yell = #FFCD00
+
+-- aspect ratios, horizontal and vertical
+
+local imgh = 8
+local imgv = 5
+
+local h1 = 5
+local h2 = 2
+local h3 = 9
+
+local v1 = 4
+local v2 = 2
+local v3 = 4
+
+local scalef = 64
+
+local z = (0, 0)
+
+se (imgh * scalef, imgv * scalef) se_blue "" {
+
+    -- Draw the cross.
+    -- The width-offset-aspect is 5:2:9, so we
+    -- define an offset of 5 * scalef
+    local aspect_ratio_w_px = (imgh*scalef//(h1+h2+h3))
+    local flag_offset_x = int(aspect_ratio_w_px * h1)
+    local cross_width = int(aspect_ratio_w_px * h2)
+
+    local aspect_ratio_h_px = (imgv*scalef//(v1+v2+v3))
+    local flag_offset_y = aspect_ratio_h_px * v1
+    local cross_thicc = aspect_ratio_h_px * v2
+    (flag_offset_x, 0) [(cross_width, imgv * scalef) se_yell ""]
+
+    -- Pipe operator restores the pointer to the top-left corner of the image,
+    -- instead of writing the next image at the end of the current one.
+    |>
+
+    -- Can't have local vars down here for some reason :(
+    (0, flag_offset_y) [(imgh * scalef , cross_thicc) se_yell ""]
+}
+
+--The dimensions of the Swedish flag are 5:2:9 horizontally and 4:2:4 vertically. The dimensions of the Swedish flag with a triple-tail are 5:2:5:8 horizontally and 4:2:4 vertically.[4] The colours of the flag are officially established through the Natural Color System to be NCS 0580-Y10R for the shade of yellow, and NCS 4055-R95B for the shade of blue.[5] They are also specified to Pantone PMS 301 C/U for blue and PMS 116 or PMS 109 U for yellow.[6] The square-cut Swedish state flag is identical to the civil ensign. The Swedish law does not regulate the design of the Swedish pennant, but it is recommended that its colour scheme should correspond with that of the flag.[7]
+
+
+local de_black = #000000
+local de_red = #DD0000
+local de_gold = #FFCC00
+
+-- aspect ratios, horizontal and vertical
+
+local imgh = 5
+local imgv = 3
+
+local h1 = 1
+local h2 = 1
+local h3 = 1
+
+local v1 = 1
+local v2 = 1
+local v3 = 1
+
+local scalef = 64
+
+local z = (0, 0)
+
+de (imgh * scalef, imgv * scalef) de_black "" {
+
+    -- Draw the horizontal stripes, no need for pipe operator.
+    local aspect_ratio_h_px = (imgv * scalef // (v1 + v2 + v3))
+    local stripe_height = aspect_ratio_h_px
+
+    (0, 0) [(imgh * scalef, stripe_height) de_black ""]
+    (0, 0) [(imgh * scalef, stripe_height) de_red ""]
+    (0, 0) [(imgh * scalef, stripe_height) de_gold ""]
+}
+
+
+local uk_blue = #012169
+local uk_red = #C8102E
+local uk_white = #FFFFFF
+
+-- aspect ratios, horizontal and vertical
+
+local imgh = 3
+local imgv = 5
+
+local h1 = 1
+local h2 = 1
+local h3 = 1
+
+local v1 = 1
+local v2 = 1
+local v3 = 1
+
+local scalef = 64
+
+local z = (0, 0)
+
+-- demonstration_of_nested_compositions (512, 512) #red "" {
+--
+--     (100, 0) [(32, 32) #blue "" {
+--         (0, 0) [(16, 16) #white ""]
+--         (16, 16) [(16, 16) #white ""]
+--     }]
+--
+--     (0, 32) [(32, 32) #white "" {
+--         (0, 0) [(16, 16) #red ""]
+--         (16, 16) [(16, 16) #red ""]
+--     }]
+--     }
+
+-- color based on loop variable vlaue
+
+
+
+local t = (1000, 1000)
+local px = (10, 10)
+f (1000, 1000) #ffffff "" {
+    (50, 50) [ (50, 50) #(int(~random()*256), int(random()*256), int(random()*256)) (str(random()*10)) ]
+}
+
