@@ -1,3 +1,5 @@
+@param myvar -- supply it with CLI.
+
 Side Effects:
 * loop var
 * random and file/io:

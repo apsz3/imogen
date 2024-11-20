@@ -1,0 +1,22 @@
+-- f (1000, 1000) #ffffff "" {
+--     local a = 0
+--     local b = 1
+--     (0, 0) repeat i:=5 {
+--         local x = (a + b) * i * 20
+--         (x*i*20, i*50) [(i*50, i*50) #red x]
+
+--     }
+-- }
+
+f (1000, 1000) #ffffff "" {
+    local a = 0
+    local b = 1
+    (0, 0) repeat i:=5 {
+        local x = (a + b) * i * 20
+        local r = 255%(i+1)*20
+        local g = 255%(i+2)*40
+        local b = 255%(i+3)*70
+        (i*20, i*50) [(i*50, i*50) #(r,g,b) x]
+--         (i*20, i*50) [(i*50, i*50) #(0,0,0) x]
+    }
+}
