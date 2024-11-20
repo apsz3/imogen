@@ -18,3 +18,19 @@ Render objects to a JSON manifest with metadata and paths to the objects
 
 `script` tag that indicates the file should not run but can be called.
     We need this to signal deferred execution but not ignored execution like `local`
+
+# Thoughts on user interactivity:
+
+Introduce different annotations for parameters.
+Tweak = it goes into the UI. For example, if we have a fractional offset of where we place something, you want to make that tweakable. Same for colors.
+export text = "Default text"
+Type check on the default, tells you what to have in the GUI, e.g. text input, slider, knob, bool, etc.
+knob / switch etc compile to the gui you get.
+switch is bool knob is range, textinput , etc.
+Export = modifiable in gui
+Extern = inputted with CLI... can also be modified in gui?
+Maybe just extend for extension
+ext text = "yeet"
+ext size = (512, 512)
+
+Godot's editor paradigm can probably be leveraged here
