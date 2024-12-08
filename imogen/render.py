@@ -22,10 +22,11 @@ class Render:
             return node.evaluate(self)
         return node
 
-    def __init__(self, tree, metadata):
+    def __init__(self, tree, metadata, **kwargs):
         self.tree = tree
         self.metadata = metadata
         self.generated_images = {}
+        self.preview = kwargs.get("preview", False)
 
     @property
     def vars(self):
@@ -213,9 +214,15 @@ class Render:
                 continue
             if isinstance(node, Composition):
                 img = self.create_composition(node)
-                img.show()
+                if self.preview:
+                    img.show()
+                else:
+                    img.save(f"{node.name}.png")
                 self.generated_images[node.name] = img
             elif isinstance(node, IMImage):
                 img = self.create_image(node)
-                img.show()
+                if self.preview:
+                    img.show()
+                else:
+                    img.save(f"{node.name}.png")
                 self.generated_images[node.name] = img

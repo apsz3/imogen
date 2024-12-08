@@ -1,7 +1,10 @@
 # Imogen
 A DSL for generating and composing images, with Pillow providing the rendering backend.
 
-`$ imogen tests/flag_se.img`
+```
+$ poetry install .
+$ imogen examples/flag_se.img
+```
 
 ![flag_se.png](flag_se.png)
 

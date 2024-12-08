@@ -4,7 +4,7 @@
 local ground = #8B4513
 local sky = #skyblue
 local fullsize = (512, 512)
-local ground_thickness = fullsize.y/8
+local ground_thickness = fullsize.y//8
 local sky fullsize sky "Sky" {
     (0, fullsize.y - ground_thickness) [ (512, ground_thickness) ground "" ]
 }
@@ -74,8 +74,8 @@ local vertical_bar_width = 20
 local horizontal_bar_height = 20
 
 -- Define the positions of the cross
-local vertical_bar_x = flag_width / 8
-local horizontal_bar_y = flag_height / 2.5
+local vertical_bar_x = flag_width // 8
+local horizontal_bar_y = flag_height // 2.5
 
 foo (512, 512) #white "" {
     (0, 0) [ (flag_width, flag_height) blue "Background" ]

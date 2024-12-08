@@ -11,7 +11,7 @@ from pprint import pprint
 # extern: comes in from CLI instead of local
 
 
-def run(file):
+def run(file, **kwargs):
     with open(file) as f:
         code = f.read()
     parse = parser.parse(code)
@@ -19,7 +19,7 @@ def run(file):
     tree = transformed.transform(parse)
     pprint(tree)
 
-    r = Render(tree, {"vars": transformed.vars})
+    r = Render(tree, {"vars": transformed.vars}, **kwargs)
     r.run()
 
 
