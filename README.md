@@ -46,7 +46,7 @@ flag_se (imgh * scalef, imgv * scalef) se_blue "" {
     -- instead of writing the next image at the end of the current one.
     |>
 
-    (0, flag_offset_y) [(imgh * scalef , cross_thicl) se_yell ""]
+    (0, flag_offset_y) [(imgh * scalef , cross_thick) se_yell ""]
 }
 ```
 
