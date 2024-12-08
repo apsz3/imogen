@@ -1,13 +1,10 @@
 # Imogen
 A DSL for generating and composing images, with Pillow providing the rendering backend.
 
-# Why?
+`$ imogen tests/flag_se.img`
 
-My original motivation was to easily generate distinct template/placeholder assets
-for game development (give me 5 64x64 squares for different mob types) without having to learn / open a GUI photo/image editing program.
+![flag_se.png](flag_se.png)
 
-The composition paradigm Imogen uses has turned out to be pleasant
-to work with, and with more features can serve an assets-as-code purpose.
 
 ```lua
 -- Swedish Flag
@@ -49,14 +46,19 @@ flag_se (imgh * scalef, imgv * scalef) se_blue "" {
     (0, flag_offset_y) [(imgh * scalef , cross_thick) se_yell ""]
 }
 ```
+# Why?
 
-`$ imogen tests/flag_se.img`
+My original motivation was to easily generate distinct template/placeholder assets
+for game development (give me 5 64x64 squares for different mob types) without having to learn / open a GUI photo/image editing program.
 
-![flag_se.png](flag_se.png)
+The composition paradigm Imogen uses has turned out to be pleasant
+to work with, and with more features can serve an assets-as-code purpose.
+
 
 # Known bugs
 * `green` as a color will parse and be black, i.e we're parsing colors without a #
-* Loop variables won't compute within expressions
+* some loop variables won't compute within expressions
+* Pipe operator resets local var scope
 
 # Upcoming Feature
 
