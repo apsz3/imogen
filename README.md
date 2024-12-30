@@ -28,11 +28,12 @@ local v3 = 4
 
 local scalef = 64
 
+-- Define the properties of the base image: `name (width, height) background_color background_text { <composition> }`
 flag_se (imgh * scalef, imgv * scalef) se_blue "" {
 
-    -- Draw the cross.
+    -- Prepare dimension values
     -- The width-offset-aspect is 5:2:9, so we
-    -- define an offset of 5 * scalef
+    -- define an offset of 5 * scalef, and round to integer
     local aspect_ratio_w_px = (imgh*scalef//(h1+h2+h3))
     local flag_offset_x = int(aspect_ratio_w_px * h1)
     local cross_width = int(aspect_ratio_w_px * h2)
@@ -40,12 +41,17 @@ flag_se (imgh * scalef, imgv * scalef) se_blue "" {
     local aspect_ratio_h_px = (imgv*scalef//(v1+v2+v3))
     local flag_offset_y = aspect_ratio_h_px * v1
     local cross_thick = aspect_ratio_h_px * v2
+
+    -- Draw the vertical bar;
+    -- Specify the actual composition by giving the (x, y) offset from (0, 0) (top left)
+    -- and defining an anonymous (unnamed) image `[(width, height) color text]` to paste
+    -- at the offset.
     (flag_offset_x, 0) [(cross_width, imgv * scalef) se_yell ""]
 
     -- Pipe operator restores the pointer to the top-left corner of the image,
     -- instead of writing the next image at the end of the current one.
     |>
-
+    -- Draw the horizontal bar
     (0, flag_offset_y) [(imgh * scalef , cross_thick) se_yell ""]
 }
 ```
