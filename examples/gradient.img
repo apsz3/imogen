@@ -1,0 +1,12 @@
+
+local t = (256, 256)
+local px = (16, 16)
+-- generates a blue color gradient from top left to bottom right
+gradient t #ffffff "" {
+    (0,0) repeat i:=t.y//px.y {
+        (0, 0) repeat j:=t.x//px.x {
+            (0, 0) [ px #(0,0,j*i) x]
+        }
+    }
+}
+

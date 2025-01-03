@@ -1,0 +1,23 @@
+local square_size = (512, 512)
+local tile_size = (64, 64)
+
+random_colors square_size #ffffff "Colored Square" {
+    (0, 0) repeat tile_size.x // 8 {
+        (0, 0) repeat tile_size.x // 8 {
+            (0, 0) repeat tile_size.x // 8 {
+                -- Due to implementation details,
+                -- we use a `~` prefix to indicate that a function call
+                -- should happen in each iteration of a `repeat`,
+                -- as opposed to being just computed once; by default,
+                -- function calls to the stdlib are marked as "deferred"
+                -- operations, and executed only at render time.
+                -- When a proper bytecode compiler is implemented, this won't
+                -- be necessary.
+                local r = ~random() * 256
+                local g = ~random() * 256
+                local b = ~random() * 256
+                (0, 0) [ (32, 32) #(~int(r), ~int(g), ~int(b)) "" ]
+            }
+       }
+    }
+}

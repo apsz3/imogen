@@ -1,0 +1,17 @@
+local my_image (128, 128) #f0ead6 "My Image!"
+
+local my_image_tmp (64, 32) #red ""
+
+local my_image2 (128, 128) #f0ead6 "My Image" {
+    (32, 0) my_image_tmp
+}
+
+local my_image3 (128, 128) #f0ead6 "My Image" {
+    (32, 0) my_image_tmp
+    (0, 0) my_image_tmp
+}
+
+my_image4 (128, 256) #f0ead6 "My Image 4" {
+    (0, 0) my_image3
+    (0, 0) [(64, 64) #green "middle"]
+}
