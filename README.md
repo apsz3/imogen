@@ -6,7 +6,7 @@ $ poetry install .
 $ imogen examples/flag_se.img -p
 ```
 
-![examples/random_colors.png]
+![](examples/random_colors.png)
 ```lua
 local square_size = (512, 512)
 local tile_size = (64, 64)
@@ -25,7 +25,7 @@ random_colors square_size #ffffff "Colored Square" {
 }
 ```
 
-![examples/flag_se.png](flag_se.png)
+![](examples/flag_se.png)
 ```lua
 -- Swedish Flag
 local se_blue = #005293
@@ -96,7 +96,9 @@ Imogen works with a simple principle of "images" and "compositions", where an im
 
 ## Images
 
-`my_image (128, 128) #f0ead6 "My Image"` will generate a 64-by-32 image with an "eggshell" background color and the text "My Image", and save it to the filesystem as `my_image.png`
+`my_image (128, 128) #f0ead6 "My Image"` will generate a 64-by-32 image with an "eggshell" background color and the text "My Image", and save it to the filesystem as `my_image.png`:
+
+![](examples/my_image.png)
 
 If an image is prefixed with `local` e.g. `local my_image`, the image will render, but not be saved to the filesystem. This is useful when defining intermediate images to be used in compositions.
 
@@ -118,7 +120,7 @@ my_image2 (128, 128) #f0ead6 "My Image" {
 
 Will produce a 32x32 image, with a red background, starting 32 pixels right and 0 pixels down from the top-left of its parent:
 
-![examples/my_image2.png]
+![](examples/my_image2.png)
 
 What is happening is that we've defined a `local` image, `my_image_tmp`, which is 64x32 with a red background and no text, and then specified in the composition section of `my_image2` (delimited by `{}`) that we should *paste* onto the parent image, starting from (0,0), but moving by an offset of (32, 0), before pasting.
 
@@ -130,7 +132,7 @@ What is happening is that we've defined a `local` image, `my_image_tmp`, which i
 
 # Upcoming Feature
 
-* @param to export local vars to be provided with CLI invocation
+* @param or `extern` to export local vars to be provided with CLI invocation or JSON specification
 * dependency graph between assets with caching and re-rendering only as needed
 * GUI for tweaking @param exports and displaying render
 * dynamic image sizes, where the final size of the asset is computed from the best fit of all its constituents
