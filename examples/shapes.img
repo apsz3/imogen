@@ -1,0 +1,16 @@
+local tile = 64
+local zpx = (0, 0)
+local bg = #(int(random()*256), int(random()*256), int(random()*256))
+
+row (tile * 20, tile * 20) bg "" {
+    zpx repeat (tile*(20+10)) { -- Add some padding to the number of iterations so we fill the whole image, since we wont be writing the full tile size each time
+        local size = (~int(~random()*(tile)+1), ~int(~random()*(tile))+1) -- +1 to avoid 0-size due to rounding
+        local color = #(~int(~random()*256), ~int(~random()*256), ~int(~random()*256))
+        zpx
+        [
+            size
+            color
+            ""
+        ]
+    }
+}
