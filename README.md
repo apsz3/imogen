@@ -6,6 +6,8 @@ $ poetry install .
 $ imogen examples/flag_se.img -p
 ```
 
+## Examples
+
 ```lua
 local square_size = (512, 512)
 local tile_size = (64, 64)

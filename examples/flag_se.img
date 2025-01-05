@@ -42,3 +42,4 @@ flag_se (imgh * scalef, imgv * scalef) se_blue "" {
     -- Draw the horizontal bar
     (0, flag_offset_y) [(imgh * scalef , cross_thick) se_yell ""]
 }
+
