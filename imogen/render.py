@@ -1,5 +1,6 @@
 from PIL import Image, ImageDraw
 from imogen.objs import (
+    Color,
     Composition,
     DeferredOperation,
     FnCall,
@@ -121,15 +122,18 @@ class Render:
                     paste_x = top_left.x + offset.x
                     paste_y = top_left.y + offset.y
                 logger.debug(f"(rep) write to {paste_x}, {paste_y}")
+
+                # Docs: Pastes another image into this image. The box argument is either a 2-tuple giving the upper left corner, a 4-tuple defining the left, upper, right, and lower pixel coordinate, or None (same as (0, 0)). See Coordinate System. If a 4-tuple is given, the size of the pasted image must match the size of the region.
+                # SO: Do not use a 4-tuple, use a 2-tuple! This crashes often when
+                # we determine size randomly.
                 img.paste(
                     _real_img,
                     (
                         paste_x,
                         paste_y,
-                        paste_x + size.x,
-                        paste_y + size.y,
                     ),
                 )
+
                 top_left.x = paste_x + size.x
                 if top_left.x >= comp.size.x:
                     top_left.x = 0
@@ -138,6 +142,7 @@ class Render:
                         logger.warning(
                             "Composition size exceeded... doing nothing though"
                         )
+
         self.metadata["vars"] = previous_vars
         return top_left
 
@@ -145,9 +150,16 @@ class Render:
     # REPEATED THINGS ARE NOT RELATIVE -- THEY ARE NOT SCOPED! THEY ARE SCOPED TO THE PARENT COMPOSITION!
     # FOR SCOPING, USE COMPOSITIONS!
     def create_composition(self, composition: Composition) -> Image:
-        size = DeferredOperation.Eval(composition.size, self)
-        color = DeferredOperation.Eval(composition.color, self)
-        img = Image.new("RGB", (size.x, size.y), color)
+        # Determine whether we've evaluated the values yet or not
+        if isinstance(composition.size, Point):
+            size = composition.size
+        else:
+            size = DeferredOperation.Eval(composition.size, self)
+        if isinstance(composition.color, Color):
+            color = composition.color
+        else:
+            color = DeferredOperation.Eval(composition.color, self)
+        img = Image.new("RGB", (size.x, size.y), color.as_tuple)
         top_left = Point(0, 0)
 
         # Insert repeated image code into the middle of the composition list where it appears
