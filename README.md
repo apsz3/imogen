@@ -6,7 +6,6 @@ $ poetry install .
 $ imogen examples/flag_se.img -p
 ```
 
-![](examples/random_colors.png)
 ```lua
 local square_size = (512, 512)
 local tile_size = (64, 64)
@@ -24,8 +23,9 @@ random_colors square_size #ffffff "Colored Square" {
     }
 }
 ```
+![](examples/random_colors.png)
 
-![](examples/flag_se.png)
+
 ```lua
 -- Swedish Flag
 local se_blue = #005293
@@ -72,6 +72,9 @@ flag_se (imgh * scalef, imgv * scalef) se_blue "" {
     (0, flag_offset_y) [(imgh * scalef , cross_thick) se_yell ""]
 }
 ```
+
+![](examples/flag_se.png)
+
 # Why?
 
 My original motivation was to easily generate distinct template/placeholder assets
