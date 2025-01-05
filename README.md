@@ -8,6 +8,8 @@ $ imogen examples/flag_se.img -p
 
 ## Examples
 
+### Random colors
+
 ```lua
 local square_size = (512, 512)
 local tile_size = (64, 64)
@@ -27,6 +29,7 @@ random_colors square_size #ffffff "Colored Square" {
 ```
 ![](examples/random_colors.png)
 
+### Swedish Flag
 
 ```lua
 -- Swedish Flag
@@ -80,7 +83,7 @@ flag_se (imgh * scalef, imgv * scalef) se_blue "" {
 # Why?
 
 My original motivation was to easily generate distinct template/placeholder assets
-for game development (give me 5 64x64 squares for different mob types) without having to learn / open a GUI photo/image editing program.
+for game development (give me 5 64x64 squares for different mob types) without having to learn / open a GUI photo/image editing program. I originally wrote a program that would take a color, dimensions, and text, and generate a PNG fitting of that description; this let me quickly generate placeholders, but wouldn't let me do anything else. It turns out that a lot of things can be designed from simple shapes, if you can _compose_ them, and reuse assets already defined.
 
 The composition paradigm Imogen uses has turned out to be pleasant to work with, but the main aspect that seems promising is allowing images to be compositional elements in other images, and establishing dependency graphs between images, so that changing an upstream image will also re-render the downstream image. So, for example, if you have a background image `image1.img` with color `purple`, and you use this image in the composition of another image `image2.img`, if the color of image1 is changed, we can rerender all of its downstream dependencies, including `image2.img1`. This has not been implemented yet, but is planned.
 

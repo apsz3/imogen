@@ -56,7 +56,7 @@ colored_square square_size #ffffff "Colored Square" {
     (0, 0) repeat 8 {
         (0, 0) repeat 8 {
             (0, 0) repeat 8 {
-                (0, 0) [ (32, 32) #green "brat" ]
+                (0, 0) [ (1515151215, 32) #green "brat" ]
             }
             (0, 0) [ (32, 32) color tx ]
 

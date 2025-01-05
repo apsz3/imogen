@@ -3,6 +3,10 @@ import typing as t
 from dataclasses import dataclass
 from PIL import ImageColor
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 @dataclass
 class Point:
@@ -130,7 +134,7 @@ class DeferredOperation:
             p = Point(
                 DeferredOperation.Eval(arg.x, ctx), DeferredOperation.Eval(arg.y, ctx)
             )
-            print(p)
+            #            print(p)
             return p
         elif isinstance(arg, Color):
             c = Color(
@@ -139,7 +143,7 @@ class DeferredOperation:
                 DeferredOperation.Eval(arg.b, ctx),
                 DeferredOperation.Eval(arg.a, ctx),
             )
-            print(c)
+            #            print(c)
             return c
         elif type(arg) in [int, str, float, bool]:
             return arg
@@ -187,7 +191,7 @@ class DeferredOperation:
         if res is None:
             breakpoint()
             raise ValueError("Why is it none")
-        print(self, "::", res)  # self.left, self.right, "=>", res)
+        logger.debug(self, "::", res)  # self.left, self.right, "=>", res)
         return res
 
     # def __call__(self, *args):

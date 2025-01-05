@@ -14,6 +14,10 @@ from imogen.objs import (
 
 from copy import deepcopy
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class Render:
 
@@ -52,10 +56,10 @@ class Render:
         text = str(dd)
         # print("!!", dd)
         color = DeferredOperation.Eval(image.color, self)
-        print(">>>>", color)
+        logger.debug(">>>>", color)
         if not isinstance(color, tuple):
             color = color.as_tuple
-        print(f"Creating image {image.name} with size {size.x}, {size.y}")
+        logger.debug(f"Creating image {image.name} with size {size.x}, {size.y}")
         #        breakpoint()
         img = Image.new("RGB", (size.x, size.y), color)
         draw = ImageDraw.Draw(img)
@@ -91,7 +95,7 @@ class Render:
             # Generate all the images
             if repeated.loop_var:
                 self.vars[repeated.loop_var].value = i
-                print("INCREMENTING LOOP VAR", i)
+                logger.debug("INCREMENTING LOOP VAR", i)
             _rimg: IntermediateImage
             for _rimg in repeated.body:
 
@@ -110,13 +114,13 @@ class Render:
                 # breakpoint()
                 _real_img = self.create_image(_rimg_img)
                 if piped:
-                    print("(rep) pipe")
+                    logger.debug("(rep) pipe")
                     paste_x = 0
                     paste_y = 0
                 else:
                     paste_x = top_left.x + offset.x
                     paste_y = top_left.y + offset.y
-                print(f"(rep) write to {paste_x}, {paste_y}")
+                logger.debug(f"(rep) write to {paste_x}, {paste_y}")
                 img.paste(
                     _real_img,
                     (
@@ -131,7 +135,9 @@ class Render:
                     top_left.x = 0
                     top_left.y += size.y
                     if top_left.y >= comp.size.y:
-                        print("Composition size exceeded... doing nothing though")
+                        logger.warning(
+                            "Composition size exceeded... doing nothing though"
+                        )
         self.metadata["vars"] = previous_vars
         return top_left
 
@@ -176,7 +182,7 @@ class Render:
             offset = DeferredOperation.Eval(intermediate.offset, self)
             # Position
             if piped:
-                print("(comp) piped")
+                logger.debug("(comp) piped")
                 # NOTE: YOU DO NEED THIS AND IT IS DIFFERENT THAN THE REPEATED VERSION!
                 paste_x = 0 + offset.x
                 paste_y = 0 + offset.y
@@ -184,7 +190,7 @@ class Render:
             else:
                 paste_x = top_left.x + offset.x
                 paste_y = top_left.y + offset.y
-            print(f"(comp) write to {paste_x}, {paste_y}")
+            logger.debug(f"(comp) write to {paste_x}, {paste_y}")
 
             img.paste(
                 intermediate_image,
@@ -200,7 +206,7 @@ class Render:
                 top_left.x = 0
                 top_left.y += intermediate.image.size.y
                 if top_left.y >= size.y:
-                    print("Composition size exceeded... doing nothing though")
+                    logger.warning("Composition size exceeded... doing nothing though")
         return img
 
     def run(self):
