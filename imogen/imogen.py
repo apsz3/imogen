@@ -9,6 +9,9 @@ from pprint import pprint
 # TODO:
 # absolute offset: !() is offest from top left
 # extern: comes in from CLI instead of local
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def run(file, **kwargs):
@@ -17,7 +20,7 @@ def run(file, **kwargs):
     parse = parser.parse(code)
     transformed = ImageTransformer()
     tree = transformed.transform(parse)
-    pprint(tree)
+    logger.debug(tree)
 
     r = Render(tree, {"vars": transformed.vars}, **kwargs)
     r.run()
