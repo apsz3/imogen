@@ -8,28 +8,37 @@ $ imogen examples/flag_se.img -p
 
 ## Examples
 
-### Random colors
+### Shapes
+
+~[](examples/shapes.png)
 
 ```lua
-local square_size = (512, 512)
-local tile_size = (64, 64)
+-- Random colored squares of random sizes at random offsets.
+local tile = 64
+local zpx = (0, 0)
+-- Random RGB
+local bg = #(int(random()*256), int(random()*256), int(random()*256))
 
-random_colors square_size #ffffff "Colored Square" {
-    (0, 0) repeat tile_size.x // 8 {
-        (0, 0) repeat tile_size.x // 8 {
-            (0, 0) repeat tile_size.x // 8 {
-                local r = ~random() * 256
-                local g = ~random() * 256
-                local b = ~random() * 256
-                (0, 0) [ (32, 32) #(~int(r), ~int(g), ~int(b)) "" ]
-            }
-       }
+shapes (tile * 20, tile * 20) bg "" {
+     -- Add some padding to the number of iterations so we fill the whole image, since we wont be writing the full tile size each time
+    zpx repeat (tile*(20+10)) {
+         -- +1 to avoid 0-size due to rounding
+        local size = (~int(~random()*(tile)+1), ~int(~random()*(tile))+1)
+        local color = #(~int(~random()*256), ~int(~random()*256), ~int(~random()*256))
+        zpx
+        [
+            size
+            color
+            ""
+        ]
     }
 }
 ```
-![](examples/random_colors.png)
 
 ### Swedish Flag
+
+
+![](examples/flag_se.png)
 
 ```lua
 -- Swedish Flag
@@ -78,14 +87,15 @@ flag_se (imgh * scalef, imgv * scalef) se_blue "" {
 }
 ```
 
-![](examples/flag_se.png)
 
 # Why?
 
-My original motivation was to easily generate distinct template/placeholder assets
-for game development (give me 5 64x64 squares for different mob types) without having to learn / open a GUI photo/image editing program. I originally wrote a program that would take a color, dimensions, and text, and generate a PNG fitting of that description; this let me quickly generate placeholders, but wouldn't let me do anything else. It turns out that a lot of things can be designed from simple shapes, if you can _compose_ them, and reuse assets already defined.
+My original motivation was to easily generate distinct template/debug/placeholder assets
+for game development ("give me 5 64x64 squares for different mob types") without having to learn / open a GUI photo/image editing program. I originally wrote a program that would take a color, dimensions, and text, and generate a PNG fitting of that description; this let me quickly generate placeholders, but wouldn't let me do anything else. It turns out that a lot of things can be designed from simple shapes, if you can _compose_ them, and reuse assets already defined.
 
-The composition paradigm Imogen uses has turned out to be pleasant to work with, but the main aspect that seems promising is allowing images to be compositional elements in other images, and establishing dependency graphs between images, so that changing an upstream image will also re-render the downstream image. So, for example, if you have a background image `image1.img` with color `purple`, and you use this image in the composition of another image `image2.img`, if the color of image1 is changed, we can rerender all of its downstream dependencies, including `image2.img1`. This has not been implemented yet, but is planned.
+The composition paradigm Imogen uses has turned out to be pleasant to work with, but the main aspect that seems promising is allowing images to be compositional elements in other images (implemented), and establishing dependency graphs between images, so that changing an upstream image will also re-render the downstream image (not implemented). So, for example, if you have a background image `image1.img` with color `purple`, and you use this image in the composition of another image `image2.img`, if the color of image1 is changed, we can rerender all of its downstream dependencies, including `image2.img1`.
+
+The hope is to extend this rendering-dependencies-as-text system to other types of media.
 
 # Features
 
@@ -104,7 +114,7 @@ Imogen works with a simple principle of "images" and "compositions", where an im
 
 ## Images
 
-`my_image (128, 128) #f0ead6 "My Image"` will generate a 64-by-32 image with an "eggshell" background color and the text "My Image", and save it to the filesystem as `my_image.png`:
+`my_image (128, 128) #f0ead6 "My Image"` will generate a 64-by-32 image with an "eggshell" background color and the text "My Image", and save it to the filesystem as `my_image.png` if ran without the `-p` flag:
 
 ![](examples/my_image.png)
 
@@ -134,16 +144,16 @@ What is happening is that we've defined a `local` image, `my_image_tmp`, which i
 
 
 # Known bugs
-* `green` as a color will parse and be black, i.e we're parsing colors without a #
 * some loop variables won't compute within expressions
 * Pipe operator resets local var scope
+* `green` as a color will parse and be black, i.e we're parsing colors without a #
 
 # Upcoming Feature
 
 * @param or `extern` to export local vars to be provided with CLI invocation or JSON specification
-* dependency graph between assets with caching and re-rendering only as needed
+* Dependency graph between assets with caching and re-rendering only as needed
 * GUI for tweaking @param exports and displaying render
-* dynamic image sizes, where the final size of the asset is computed from the best fit of all its constituents
-* right-hand-side offsets
-* sugar where composition elements without prefixed tuple are (0,0) offset
+* Dynamic image sizes, where the final size of the asset is computed from the best fit of all its constituents
+* Right-hand-side offsets
+* Sugar where composition elements without prefixed tuple are (0,0) offset
 
