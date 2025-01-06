@@ -8,33 +8,6 @@ $ imogen examples/flag_se.img -p
 
 ## Examples
 
-### Shapes
-
-![](examples/shapes.png)
-
-```lua
--- Random colored squares of random sizes at random offsets.
-local tile = 64
-local zpx = (0, 0)
--- Random RGB
-local bg = #(int(random()*256), int(random()*256), int(random()*256))
-
-shapes (tile * 20, tile * 20) bg "" {
-     -- Add some padding to the number of iterations so we fill the whole image, since we wont be writing the full tile size each time
-    zpx repeat (tile*(20+10)) {
-         -- +1 to avoid 0-size due to rounding
-        local size = (~int(~random()*(tile)+1), ~int(~random()*(tile))+1)
-        local color = #(~int(~random()*256), ~int(~random()*256), ~int(~random()*256))
-        zpx
-        [
-            size
-            color
-            ""
-        ]
-    }
-}
-```
-
 ### Swedish Flag
 
 
@@ -86,8 +59,28 @@ flag_se (imgh * scalef, imgv * scalef) se_blue "" {
     (0, flag_offset_y) [(imgh * scalef , cross_thick) se_yell ""]
 }
 ```
+### Shapes
 
+![](examples/shapes.png)
 
+```lua
+local tile = 64
+local zpx = (0, 0)
+local bg = #(int(random()*256), int(random()*256), int(random()*256))
+
+shapes (tile * 20, tile * 20) bg "" {
+    zpx repeat (tile*(20+10)) { -- Add some padding to the number of iterations so we fill the whole image, since we wont be writing the full tile size each time
+        local size = (~int(~random()*(tile)+1), ~int(~random()*(tile))+1) -- +1 to avoid 0-size due to rounding
+        local color = #(~int(~random()*256), ~int(~random()*256), ~int(~random()*256))
+        zpx
+        [
+            size
+            color
+            ""
+        ]
+    }
+}
+```
 # Why?
 
 My original motivation was to easily generate distinct template/debug/placeholder assets
