@@ -10,7 +10,7 @@ $ imogen examples/flag_se.img -p
 
 ### Shapes
 
-~[](examples/shapes.png)
+![](examples/shapes.png)
 
 ```lua
 -- Random colored squares of random sizes at random offsets.
