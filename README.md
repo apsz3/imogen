@@ -1,5 +1,5 @@
 # Imogen
-A DSL for generating and composing images, with Pillow providing the rendering backend.
+A DSL for generating and composing images from geometric primitives, with Pillow providing the rendering backend.
 
 ```
 $ poetry install .
@@ -32,7 +32,8 @@ local v3 = 4
 
 local scalef = 64
 
--- Define the properties of the base image: `name (width, height) background_color background_text { <composition> }`
+-- Define the properties of the base image:
+-- `name (width, height) background_color background_text { <composition> }`
 flag_se (imgh * scalef, imgv * scalef) se_blue "" {
 
     -- Prepare dimension values
@@ -96,9 +97,11 @@ The hope is to extend this rendering-dependencies-as-text system to other types 
 * Variables
 * Syntactic sugar for colors: #(r,g,b) `#(100, 250, 134)`; HTML name `#red`; Hex `#ffeeaa`
 * `local` and non-local image declarations, with `local` not being saved to the filesystem during rendering
+* Anonymous images (not saved to file system or named) for quick composition. (`[ offset color text]`).
 * `repeat` for looping
 * Loop variables for counting iteration
 * stdlib hooks like `int` and `random`
+
 
 
 # How?
@@ -107,7 +110,7 @@ Imogen works with a simple principle of "images" and "compositions", where an im
 
 ## Images
 
-`my_image (128, 128) #f0ead6 "My Image"` will generate a 64-by-32 image with an "eggshell" background color and the text "My Image", and save it to the filesystem as `my_image.png` if ran without the `-p` flag:
+`my_image (128, 128) #f0ead6 "My Image"` will generate a 128-by-128 image with an "eggshell" background color and the text "My Image", and save it to the filesystem as `my_image.png` if ran without the `-p` flag:
 
 ![](examples/my_image.png)
 
@@ -115,9 +118,14 @@ If an image is prefixed with `local` e.g. `local my_image`, the image will rende
 
 ## Compositions
 
-A composition is specified as a series of pairs of "offsets" and "images".
+A composition is specified as a series of pairs of "offsets" and "images", given in curly-braces after the definition of the "base" image.
 An offset is a value specifying the number of pixels to move down and right from (0,0),
-the top-left corner of the base image the composition is working from.
+the top-left corner of the *previous image* in the composition.
+For the first image in the composition, the offset is from (0,0) of the base image, which is the top-left corner. 
+For subsequent images, the offset is from the *bottom right* of the previous image. If the width is exceeded,
+the image wraps around. 
+An image is *pasted* with its top-left corner at the location specified by previous image bottom right + offset. 
+
 
 This code
 
@@ -132,8 +140,6 @@ my_image2 (128, 128) #f0ead6 "My Image" {
 Will produce a 32x32 image, with a red background, starting 32 pixels right and 0 pixels down from the top-left of its parent:
 
 ![](examples/my_image2.png)
-
-What is happening is that we've defined a `local` image, `my_image_tmp`, which is 64x32 with a red background and no text, and then specified in the composition section of `my_image2` (delimited by `{}`) that we should *paste* onto the parent image, starting from (0,0), but moving by an offset of (32, 0), before pasting.
 
 
 # Known bugs
