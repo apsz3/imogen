@@ -3,7 +3,7 @@ A DSL for generating and composing images from geometric primitives, with Pillow
 
 ```
 $ poetry install .
-$ imogen examples/flag_se.img -p
+$ poetry run imogen examples/flag_se.img -p
 ```
 
 ## Examples
