@@ -156,10 +156,10 @@ class Render:
         else:
             size = DeferredOperation.Eval(composition.size, self)
         if isinstance(composition.color, Color):
-            color = composition.color
+            color = composition.color.as_tuple
         else:
             color = DeferredOperation.Eval(composition.color, self)
-        img = Image.new("RGB", (size.x, size.y), color.as_tuple)
+        img = Image.new("RGB", (size.x, size.y), color)
         top_left = Point(0, 0)
 
         # Insert repeated image code into the middle of the composition list where it appears
