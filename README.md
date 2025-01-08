@@ -2,7 +2,7 @@
 A DSL for generating and composing images from geometric primitives, with Pillow providing the rendering backend.
 
 ```
-$ poetry install .
+$ poetry install
 $ poetry run imogen examples/flag_se.img -p
 ```
 
@@ -121,10 +121,10 @@ If an image is prefixed with `local` e.g. `local my_image`, the image will rende
 A composition is specified as a series of pairs of "offsets" and "images", given in curly-braces after the definition of the "base" image.
 An offset is a value specifying the number of pixels to move down and right from (0,0),
 the top-left corner of the *previous image* in the composition.
-For the first image in the composition, the offset is from (0,0) of the base image, which is the top-left corner. 
+For the first image in the composition, the offset is from (0,0) of the base image, which is the top-left corner.
 For subsequent images, the offset is from the *bottom right* of the previous image. If the width is exceeded,
-the image wraps around. 
-An image is *pasted* with its top-left corner at the location specified by previous image bottom right + offset. 
+the image wraps around.
+An image is *pasted* with its top-left corner at the location specified by previous image bottom right + offset.
 
 
 This code
